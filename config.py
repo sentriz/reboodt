@@ -2,20 +2,20 @@
 servers = [
     {
         'connect':  False,
-        'name':     "EsperNet",
-        'host':     "irc.esper.net",
+        'name':     "ExampleNet",
+        'host':     "irc.example.net",
         'port':     6667,
-        'nick':     "rebooped",
-        'chans':    ["#tests"],
+        'nick':     "bot_nick",
+        'chans':    ["#channel1", "channel2"],
         'auth':     (False, "password")
     },
     {
         'connect':  False,
-        'name':     "EsperNet",
-        'host':     "irc.esper.net",
+        'name':     "ExampleNet",
+        'host':     "irc.example.net",
         'port':     6667,
-        'nick':     "rebooped",
-        'chans':    ["#tests"],
+        'nick':     "bot_nick",
+        'chans':    ["#channel1", "channel2"],
         'auth':     (False, "password")
     },
     {
