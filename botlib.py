@@ -1,3 +1,5 @@
+# Based on Alec Hussey's ByBotlib
+
 import socket
 from collections import OrderedDict
 import sys
@@ -5,6 +7,7 @@ import time
 import random
 import string
 import threading
+import config
 
 class Protocol:
     def __init__(self, server, port=6667):
@@ -45,20 +48,24 @@ class Protocol:
         return data
 
     def join(self, channel):
-        self.send("JOIN %s" % channel)
+        self.send("JOIN " + channel)
 
     def notice(self, nickname, text):
-        self.send("NOTICE %s :%s" % (nickname, text))
+        self.send("NOTICE {0} :{1}".format(nickname, text))
 
     def privmsg(self, reciever, message):
-        self.send("PRIVMSG %s :%s" % (reciever, message))
+        self.send("PRIVMSG {0} :{1}".format(reciever, message))
+        
+    def topic(self, channel, topic):
+        self.send("TOPIC {0} :{1}".format(channel, topic))
 
     def identify(self, username):
-        self.send("USER %s localhost localhost :%s" % (username, username))
-        self.send("NICK %s" % username)
+        self.send("USER {0} localhost localhost :{1}".format(
+            username, username))
+        self.send("NICK " + username)
 
     def whois(self, nickname):
-        self.send("WHOIS %s" % nickname)
+        self.send("WHOIS " + nickname)
 
         # Pull down who is data from server
         data = ""
@@ -106,12 +113,13 @@ class Bot(threading.Thread):
                     self.protocol.join(channel)
                 self.joined = True
 
-        if self.get_string_type() == "PRIVMSG":
+        if self.get_string_type() in ("PRIVMSG", "command"):
+            parsed_string = self.parse_string("PRIVMSG")
             print("[{0}][{1}] <{2}> {3}".format(
                 self.network_name,
-                self.parse_string("PRIVMSG")["target"],
-                self.parse_string("PRIVMSG")["sender"],
-                self.parse_string("PRIVMSG")["message"]
+                parsed_string["target"],
+                parsed_string["sender"],
+                parsed_string["message"]
             ))
 
     def parse_string(self, to_get=None, string=None):
@@ -126,6 +134,12 @@ class Bot(threading.Thread):
             ('PING', {
                 'pong':      lambda s: s.split()[1].rstrip()
             }),
+            ('command', {
+                'command':   lambda s: s.split(" :")[1].split()[0][1:],
+                'arguments': lambda s: s.split(" :")[1].split()[1:],
+                'channel':   lambda s: s.split()[2],
+                'sender':    lambda s: s[1:].split("!")[0]
+            }),
             ('PRIVMSG', {
                 'message':   lambda s: s.split(" :")[-1].replace("\r\n", ""),
                 'sender':    lambda s: s[1:].split("!")[0],
@@ -133,10 +147,6 @@ class Bot(threading.Thread):
             }),
             ('motd', {
                 'message':   lambda s: " ".join(s.split()[3:])[1:]
-            }),
-            ('command', {
-                'command':   lambda s: s.split(" :")[1].split()[0],
-                'arguments': lambda s: s.split(" :")[1].split()[1:]
             }),
         ])
 
@@ -153,12 +163,14 @@ class Bot(threading.Thread):
 
         if not string:
             string = self.data
+            
+        command_prefix = config.command_prefix
 
         types = OrderedDict([
             ("PING",     (lambda s: s.split(" :")[0], "PING")),
-            ("command",  (lambda s: s.split()[3][1],  "!")),
-            ("PRIVMSG",  (lambda s: s.split()[1],     "PRIVMSG")),
-            ("motd",     (lambda s: s.split()[1],     "372"))
+            ("command",  (lambda s: s.split()[3][1], command_prefix)),
+            ("PRIVMSG",  (lambda s: s.split()[1], "PRIVMSG")),
+            ("motd",     (lambda s: s.split()[1], "372"))
         ])
 
         for type, (find_type, correct_type) in types.items():
@@ -170,8 +182,11 @@ class Bot(threading.Thread):
                 if result == correct_type:
                     return type
                     
-    def say(self, message):
-        channel = self.parse_string("PRIVMSG")["target"]
+    def say(self, message, channel=None):
+        if not channel:
+            parsed_string = self.parse_string("PRIVMSG")
+            channel = parsed_string["target"]
+            
         self.protocol.privmsg(channel, message)
         print("[{0}][{1}] <{2}> {3}".format(
             self.network_name,
@@ -184,7 +199,7 @@ class Bot(threading.Thread):
         # Start loop and perform user defined actions
         while True:
             self._actions()
-
+        
 class BotManager:
     def __init__(self):
         """
