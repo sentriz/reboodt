@@ -1,0 +1,34 @@
+"""
+template.txt, make a copy of this file and modify it
+to make a plugin.
+* see BasePlugin also for other features
+"""
+
+from files.plugins.__init__ import BasePlugin
+# import anything else you need
+
+class YourPluginName(BasePlugin):
+    """
+    reboodt variable, does what you want
+    usage: .command
+    returns: you decide
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.command = ".command"
+ 
+    def command_function(self, info):
+        # info format: {'sender': 'sender', 
+        #               'arguments': [], 
+        #               'channel': '#channel'}
+        # return what the output of this command should be
+        string_to_return = ""
+        return string_to_return
+        
+classes = (YourPluginName,)
+        
+if __name__ == "__main__":
+    for variable in variables:
+        print(variable.__doc__)
