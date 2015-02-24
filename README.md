@@ -13,7 +13,7 @@ Commands
     ".calc 1 + 2" ... returns "3"
     ".qr string" ... returns "http://goo.gl/xxxxxx", a qr code of your string
     ".insult [user]" ... returns a shakespearean insult, optionally aimed at a user
-    ".say string" ... return sstring, useful is string is a .variable
+    ".say string" ... return string, useful is string is a .variable
 
 Variables
 -----------
