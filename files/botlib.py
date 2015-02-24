@@ -7,7 +7,7 @@ import time
 import random
 import string
 import threading
-import config
+import files.config as config
 
 class Protocol:
     def __init__(self, server, port=6667):
@@ -73,8 +73,8 @@ class Protocol:
             data += self.recv()
         return data
 
-    def disconnect(self, message="Disconnected"):
-        self.send("QUIT :%s" % message)
+    def disconnect(self, message="disconnect"):
+        self.send("QUIT :" + message)
         #time.sleep(5.0)
         #self.connection.shutdown(socket.SHUT_RDWR)
         #self.connection.close()
@@ -135,7 +135,7 @@ class Bot(threading.Thread):
                 'pong':      lambda s: s.split()[1].rstrip()
             }),
             ('command', {
-                'command':   lambda s: s.split(" :")[1].split()[0][1:],
+                'command':   lambda s: s.split(" :")[1].split()[0],
                 'arguments': lambda s: s.split(" :")[1].split()[1:],
                 'channel':   lambda s: s.split()[2],
                 'sender':    lambda s: s[1:].split("!")[0]
@@ -163,12 +163,10 @@ class Bot(threading.Thread):
 
         if not string:
             string = self.data
-            
-        command_prefix = config.command_prefix
 
         types = OrderedDict([
             ("PING",     (lambda s: s.split(" :")[0], "PING")),
-            ("command",  (lambda s: s.split()[3][1], command_prefix)),
+            ("command",  (lambda s: s.split()[3][1], ".")),
             ("PRIVMSG",  (lambda s: s.split()[1], "PRIVMSG")),
             ("motd",     (lambda s: s.split()[1], "372"))
         ])
