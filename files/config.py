@@ -7,7 +7,7 @@ servers = [
         'name':     "GeekShed",
         'host':     "irc.geekshed.net",
         'port':     6667,
-        'nick':     "reboodt",
+        'nick':     "reboodty",
         'chans':    ["#drpeen", "#testong"],
         'auth':     (False, "password") #authenticate with NickServ? if True, type password too.
     },

@@ -14,6 +14,9 @@ Commands
     ".qr string" ... returns "http://goo.gl/xxxxxx", a qr code of your string
     ".insult [user]" ... returns a shakespearean insult, optionally aimed at a user
     ".say string" ... return string, useful is string is a .variable
+    ".join #channel"
+    ".quit [message]" ... quit the current server with an optional message
+    ".commands" ... show this list of commands
 
 Variables
 -----------

@@ -12,8 +12,7 @@ class Say(BasePlugin):
         
         self.command = ".say"
  
-    def command_function(self, info):
-        arguments = info["arguments"]
+    def command_function(self, arguments, sender, channel):
         string = " ".join(arguments)
         return string
         

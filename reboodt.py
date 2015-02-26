@@ -24,12 +24,14 @@ class UserBot(Bot):
             command = parsed_string["command"]
             sender = parsed_string["sender"]
             arguments = parsed_string["arguments"]
+            channel = parsed_string["channel"]
             
             if command == ".join" and sender in config.admins:
-                if not arguments: return
+                if not arguments:
+                    return
                 channels = arguments
-                for channel in channels:
-                    self.protocol.join(channel)
+                for channel_ in channels:
+                    self.protocol.join(channel_)
                     
             elif command == ".quit" and sender in config.admins:
                 reason = " ".join(arguments)
@@ -40,31 +42,29 @@ class UserBot(Bot):
                 if len(self.commands) > 1 and len(self.variables) > 1:
                     self.say("commands: " + ", ".join(self.commands))
                     self.say("variables: " + ", ".join(self.variables))
-                
         else:
             return
             
-        if command not in self.commands:
-            return
+        if command in self.commands:
+            plugin = self.commands[command]
             
-        evaluated_arguments = self.evaluate_arguments(arguments)
-        parsed_string["arguments"] = evaluated_arguments
-        
-        plugin = self.commands[command]
-        if plugin.needs_admin and sender not in config.admins:
-            sorry_string = "sorry, you need to be an admin to use the {0} plugin"
-            self.protocol.privmsg(sender, sorry_string.format(plugin.name))
-            return
+            if plugin.needs_admin and sender not in config.admins:
+                sorry_string = "sorry, you need to be an admin to use the {0} plugin"
+                self.protocol.privmsg(sender, sorry_string.format(plugin.name))
+                return
+                    
+            try:
+                evaluated_arguments = self.evaluate_arguments(arguments)
+                command_output = plugin.command_function(
+                    evaluated_arguments, sender, channel)
+                self.say(command_output) 
                 
-        try:
-            command_output = plugin.command_function(parsed_string)
-            print(command_output)
-            self.say(command_output) 
-            
-        except Exception as e:
-            self.say("error: {0}".format(str(e).lower()))
-            self.say("     - {0}".format(str(e.__doc__).lower()))
-            #raise
+            except Exception as e:
+                self.say("error: {0}".format(str(e).lower()))
+                self.say("     - {0}".format(str(e.__doc__).lower()))
+                raise
+        else:
+            return
                 
     def evaluate_arguments(self, arguments):
         """
