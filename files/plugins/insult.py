@@ -16,7 +16,7 @@ class Insult(BasePlugin):
         super().__init__(*args, **kwargs)
         
         self.command = ".insult"
-        self.insults = [[], [], []]
+        self.insults = {}
         
         self._load_insults()
         
@@ -29,34 +29,25 @@ class Insult(BasePlugin):
         with open(insults_file) as file:
             for line in file:
                 line = line.rstrip()
-                if line == "#first":
-                    append_to = self.insults[0]
+                if line.startswith("#"):
+                    word_pos = line.strip("#")
                     continue
-                elif line == "#second":
-                    append_to = self.insults[1]
-                    continue
-                elif line == "#third":
-                    append_to = self.insults[2]
-                    continue
-                append_to.append(line)
+                if word_pos not in self.insults:
+                    self.insults[word_pos] = list = []
+                list.append(line)
                 
-    def command_function(self, info):
-        arguments = info["arguments"]
+    def command_function(self, arguments, sender, channel):
         user = arguments[0] if arguments else None
         
-        first_word = random.choice(self.insults[0])
-        second_word = random.choice(self.insults[1])
-        third_word = random.choice(self.insults[2])
+        first_word = random.choice(self.insults["first"])
+        second_word = random.choice(self.insults["second"])
+        third_word = random.choice(self.insults["third"])
         
         insult = "{0} {1} {2}".format(
             first_word, second_word, third_word)
             
-        print(self.insults)
-            
-        if user:
-            return user + ", thou " + insult + "!"
-        else:
-            return "thou " + insult + "!"
+        prefix = user + ", " if user else ""
+        return prefix + "thou " + insult + "!"
         
 classes = (Insult,)
         

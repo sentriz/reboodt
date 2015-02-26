@@ -16,8 +16,8 @@ class Calc(BasePlugin):
     def _calculate(self, string):
         return "21"
         
-    def command_function(self, info):
-        string = info["arguments"]
+    def command_function(self, arguments, sender, channel):
+        string = arguments
         return self._calculate(string)
         
 classes = (Calc,)

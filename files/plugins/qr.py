@@ -23,8 +23,8 @@ class QR(BasePlugin):
 
         return qr_api_url + urllib.parse.urlencode(qr_api_args)
  
-    def command_function(self, info):
-        string = " ".join(info["arguments"])
+    def command_function(self, arguments, sender, channel):
+        string = " ".join(arguments)
         if not string:
             self.bot.say("please provide valid arguments")
             return

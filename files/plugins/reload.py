@@ -13,7 +13,7 @@ class Reload(BasePlugin):
         self.command = ".reload"
         self.needs_admin = True
  
-    def command_function(self, info):      
+    def command_function(self, arguments, sender, channel):  
         self.bot.load_plugins()
         return "plugins reloaded"
         
