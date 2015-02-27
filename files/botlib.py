@@ -80,7 +80,7 @@ class Protocol:
         #self.connection.close()
 
 class Bot(threading.Thread):
-    def __init__(self, server, port, channels, nick, network_name):
+    def __init__(self, server, port, channels, nick, network_name, authentication):
         # Intialize threading
         threading.Thread.__init__(self)
 
@@ -96,13 +96,17 @@ class Bot(threading.Thread):
         self.data = None
         self.joined = False
         self.network_name = network_name
+        self.authentication = authentication
 
     def _actions(self):
         # Recieve incoming data from server
         self.data = self.protocol.recv()
+        print(self.data)
+        
+        string_type = self.get_string_type()
 
         # Check for and respond to PING requests
-        if self.get_string_type() == "PING":
+        if string_type == "PING":
             pong = self.parse_string()["pong"]
             self.protocol.send("PONG " + pong)
 
@@ -113,7 +117,7 @@ class Bot(threading.Thread):
                     self.protocol.join(channel)
                 self.joined = True
 
-        if self.get_string_type() in ("PRIVMSG", "command"):
+        elif string_type in ("PRIVMSG", "command"):
             parsed_string = self.parse_string("PRIVMSG")
             print("[{0}][{1}] <{2}> {3}".format(
                 self.network_name,
@@ -121,6 +125,15 @@ class Bot(threading.Thread):
                 parsed_string["sender"],
                 parsed_string["message"]
             ))
+            
+        elif string_type == "NOTICE":
+            auth_or_not, password = self.authentication
+            if not auth_or_not:
+                return
+            # This nickname is registered.. please choose..
+            if not "choose a different" in self.data:
+                return
+            self.protocol.privmsg("NickServ", "identify " + password)
 
     def parse_string(self, to_get=None, string=None):
 
@@ -130,25 +143,28 @@ class Bot(threading.Thread):
         if not to_get:
             to_get = self.get_string_type(string)
 
-        to_parse = OrderedDict([
-            ('PING', {
+        to_parse = {
+            'PRIVMSG': {
+                'message':   lambda s: s.split(" :")[-1].replace("\r\n", ""),
+                'sender':    lambda s: s[1:].split("!")[0],
+                'target':    lambda s: s.split()[2]
+            },
+            'PING': {
                 'pong':      lambda s: s.split()[1].rstrip()
-            }),
-            ('command', {
+            },
+            'NOTICE': {
+                'message':   lambda s: " ".join(s.split()[3:])[1:]
+            },
+            'command': {
                 'command':   lambda s: s.split(" :")[1].split()[0],
                 'arguments': lambda s: s.split(" :")[1].split()[1:],
                 'channel':   lambda s: s.split()[2],
                 'sender':    lambda s: s[1:].split("!")[0]
-            }),
-            ('PRIVMSG', {
-                'message':   lambda s: s.split(" :")[-1].replace("\r\n", ""),
-                'sender':    lambda s: s[1:].split("!")[0],
-                'target':    lambda s: s.split()[2]
-            }),
-            ('motd', {
+            },
+            'motd': {
                 'message':   lambda s: " ".join(s.split()[3:])[1:]
-            }),
-        ])
+            }
+        }
 
         if to_get in to_parse:
             to_return = {}
@@ -168,7 +184,8 @@ class Bot(threading.Thread):
             ("PING",     (lambda s: s.split(" :")[0], "PING")),
             ("command",  (lambda s: s.split()[3][1], ".")),
             ("PRIVMSG",  (lambda s: s.split()[1], "PRIVMSG")),
-            ("motd",     (lambda s: s.split()[1], "372"))
+            ("motd",     (lambda s: s.split()[1], "372")),
+            ("NOTICE",   (lambda s: s.split()[1], "NOTICE"))
         ])
 
         for type, (find_type, correct_type) in types.items():
