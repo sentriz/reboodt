@@ -13,10 +13,10 @@ Commands
     ".calc 1 + 2" ... returns "3"
     ".qr string" ... returns "http://goo.gl/xxxxxx", a qr code of your string
     ".insult [user]" ... returns a shakespearean insult, optionally aimed at a user
-    ".say string" ... return string, useful is string is a .variable
-    ".join #channel"
+    ".say string" ... returns "string", useful if string is a .variable
+    ".join #channel" ... joins a #channel
     ".quit [message]" ... quit the current server with an optional message
-    ".help [command]" ... show help for a command, if not provided, show a list of commands
+    ".help [command]" ... display help for a command if provided. otherwise, list commands
 
 Variables
 -----------

@@ -55,7 +55,7 @@ class Protocol:
 
     def privmsg(self, reciever, message):
         self.send("PRIVMSG {0} :{1}".format(reciever, message))
-        
+
     def topic(self, channel, topic):
         self.send("TOPIC {0} :{1}".format(channel, topic))
 
@@ -127,7 +127,7 @@ class Bot(threading.Thread):
             if string_type == "PRIVMSG":
                 non_command_message = parsed_string["message"]
                 self.last_message = non_command_message
-            
+
         elif string_type == "NOTICE":
             auth_or_not, password = self.authentication
             if not auth_or_not:
@@ -198,12 +198,12 @@ class Bot(threading.Thread):
             else:
                 if result == correct_type:
                     return type
-                    
+
     def say(self, message, channel=None):
         if not channel:
             parsed_string = self.parse_string("PRIVMSG")
             channel = parsed_string["target"]
-            
+
         self.protocol.privmsg(channel, message)
         print("[{0}][{1}] <{2}> {3}".format(
             self.network_name,
@@ -217,7 +217,7 @@ class Bot(threading.Thread):
         # Start loop and perform user defined actions
         while True:
             self._actions()
-        
+
 class BotManager:
     def __init__(self):
         """
