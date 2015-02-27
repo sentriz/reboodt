@@ -10,7 +10,7 @@ servers = [
         'nick':     "bot_nick",
         'chans':    ["#channel1", "channel2"],
         'auth':     (False, "password") # auth with NickServ?
-    }
+    },
     {
         'connect':  False,
         'name':     "ExampleNet",
@@ -19,7 +19,7 @@ servers = [
         'nick':     "bot_nick",
         'chans':    ["#channel1", "channel2"],
         'auth':     (False, "password")
-    }
+    },
     {
         'connect':  False,
         'name':     "ExampleNet",
