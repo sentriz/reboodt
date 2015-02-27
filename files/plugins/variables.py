@@ -32,8 +32,9 @@ class Last(BaseVariable):
         self.variable = ".last"
  
     def variable_function(self):
-        if self.bot.get_string_type() == "PRIVMSG":
-            return self.bot.parse_string()["message"]
+        last_message = self.bot.last_message
+        if last_message:
+            return last_message
         else:
             return "could not find last message"
         

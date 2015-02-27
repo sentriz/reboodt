@@ -40,7 +40,7 @@ class UserBot(Bot):
                 self.protocol.disconnect(reason)
             
             elif command in (".commands", ".help"):
-                if len(self.commands) > 1 and len(self.variables) > 1:
+                if not arguments:
                     self.say("commands: " + ", ".join(self.commands))
                     self.say("variables: " + ", ".join(self.variables))
         else:
@@ -63,7 +63,7 @@ class UserBot(Bot):
             except Exception as e:
                 self.say("error: {0}".format(str(e).lower()))
                 self.say("     - {0}".format(str(e.__doc__).lower()))
-                raise
+                #raise
         else:
             return
                 

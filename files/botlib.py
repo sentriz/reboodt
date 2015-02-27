@@ -94,6 +94,7 @@ class Bot(threading.Thread):
         self.channels = channels
         self.nick = nick
         self.data = None
+        self.last_message = None
         self.joined = False
         self.network_name = network_name
         self.authentication = authentication
@@ -101,7 +102,6 @@ class Bot(threading.Thread):
     def _actions(self):
         # Recieve incoming data from server
         self.data = self.protocol.recv()
-        
         string_type = self.get_string_type()
 
         # Check for and respond to PING requests
@@ -124,6 +124,9 @@ class Bot(threading.Thread):
                 parsed_string["sender"],
                 parsed_string["message"]
             ))
+            if string_type == "PRIVMSG":
+                non_command_message = parsed_string["message"]
+                self.last_message = non_command_message
             
         elif string_type == "NOTICE":
             auth_or_not, password = self.authentication
@@ -208,6 +211,7 @@ class Bot(threading.Thread):
             self.nick,
             message
         ))
+        self.last_message = message
 
     def run(self):
         # Start loop and perform user defined actions
