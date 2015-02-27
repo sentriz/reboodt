@@ -7,6 +7,14 @@ Installation
 modify *files.config.py* to your liking, then
 
     python reboodt.py
+	
+Usage
+-----------
+commands start with "." followed by the command name.. eg. ".calc"
+after the command, a string, variable, or a combination of the two can be passed as arguments
+an example of this would be ".qr .last", which would generate a QR code of that last message said in the channel
+the arguments don't have to be just a string or just a variable either, they can be mixed up
+eg. ".say the current time is .time on the server" which would do exactly what you think
 
 Commands
 -----------
