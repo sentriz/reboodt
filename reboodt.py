@@ -28,6 +28,7 @@ class UserBot(Bot):
             
             if command == ".join" and sender in config.admins:
                 if not arguments:
+                    self.say("please provide at least one channel")
                     return
                 channels = arguments
                 for channel_ in channels:
@@ -124,7 +125,8 @@ if __name__ == "__main__":
                 server["port"],
                 server["chans"],
                 server["nick"],
-                server["name"]
+                server["name"],
+                server["auth"]
             )
             reboodt.load_plugins()
             reboodt.run()
