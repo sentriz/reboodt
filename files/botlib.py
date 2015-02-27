@@ -101,7 +101,6 @@ class Bot(threading.Thread):
     def _actions(self):
         # Recieve incoming data from server
         self.data = self.protocol.recv()
-        print(self.data)
         
         string_type = self.get_string_type()
 
