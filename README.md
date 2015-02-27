@@ -16,7 +16,7 @@ Commands
     ".say string" ... return string, useful is string is a .variable
     ".join #channel"
     ".quit [message]" ... quit the current server with an optional message
-    ".commands" ... show this list of commands
+    ".help [command]" ... show help for a command, if not provided, show a list of commands
 
 Variables
 -----------
