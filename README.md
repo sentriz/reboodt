@@ -26,6 +26,7 @@ note: `[]` denotes optional arguments
     ".qr string"      ... returns "http://goo.gl/xxxxxx", a qr code of your string
     ".insult [user]"  ... returns a shakespearean insult, optionally aimed at a user
     ".say string"     ... returns "string", useful if string is a .variable
+    ".google query"   ... search google for a query
     ".help [command]" ... returns help for a command if provided. otherwise, list commands
     ".join #channel"  ... joins a #channel
     ".quit [message]" ... quit the current server with an optional message
