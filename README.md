@@ -6,8 +6,9 @@ Installation
 -----------
 modify `files.config.py` to your liking, then
 
+    pip install -r requirements.txt 
     python reboodt.py
-	
+    
 Usage
 -----------
 - commands start with `.` followed by the command name - eg. `.calc`
