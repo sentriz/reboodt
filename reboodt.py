@@ -30,10 +30,10 @@ class UserBot(Bot):
         channel = parsed_string["channel"]
 
         if command == ".join" and sender in config.admins:
+            channels = arguments
             if not arguments:
                 self.say("please provide at least one channel")
                 return
-            channels = arguments
             for channel_ in channels:
                 self.protocol.join(channel_)
 
@@ -64,7 +64,15 @@ class UserBot(Bot):
             evaluated_arguments = self._evaluate_arguments(arguments)
             command_output = plugin.command_function(
                 evaluated_arguments, sender, channel)
-            self.say(command_output)
+                
+            if type(command_output).__name__ == "str":
+                self.say(command_output)
+            elif type(command_output).__name__ in ("generator", "list"):
+                for element in command_output:
+                    self.say(element)
+            else:
+                self.say('plugin {0} returns an unknown object type "{1}"'.format(
+                    plugin.name, type(command_output).__name__))
 
         except Exception as e:
             self.say("error: {0}".format(str(e).lower()))
@@ -143,11 +151,12 @@ class UserBot(Bot):
                     self.variables[plugin.variable] = plugin
                 elif hasattr(plugin, "command"):
                     self.commands[plugin.command] = plugin
-                print('plugin "{0}" from file "{1}" loaded'.format(
+                print('loaded plugin "{0}" from file "{1}"'.format(
                     plugin.name, file))
-
+                    
+                    
 if __name__ == "__main__":
-
+        
     for server in config.servers:
         if server["connect"]:
             reboodt = UserBot(
