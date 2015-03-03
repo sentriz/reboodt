@@ -50,3 +50,4 @@ classes = (Google,)
 if __name__ == "__main__":
     for class_ in classes:
         print(class_.__doc__)
+        
