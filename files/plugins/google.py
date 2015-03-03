@@ -42,7 +42,7 @@ class Google(BasePlugin):
             result_count, query, time)
         for result in results:
             yield "{1} ({0})".format(
-                result["visibleUrl"], result["titleNoFormatting"]
+                result["url"], result["titleNoFormatting"]
             )
         
 classes = (Google,)
