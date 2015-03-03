@@ -15,7 +15,7 @@ class UserBot(Bot):
 
     def _actions(self):
         """
-        loop that listens and performs user defined actions
+        loop that listens and performs user defined commands
         """
 
         super()._actions()
