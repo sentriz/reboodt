@@ -6,7 +6,6 @@ Installation
 -----------
 modify `files.config.py` to your liking, then
 
-    pip install -r requirements.txt 
     python reboodt.py
     
 Usage
