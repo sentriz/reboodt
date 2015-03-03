@@ -12,10 +12,11 @@ class YourPluginName(BasePlugin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
+        # change to your command, eg. ".wiki"
         self.command = ".command"
  
     def command_function(self, arguments, sender, channel):
-        #modify(arguments)
+        # modify(arguments)
         string_to_return = ""
         return string_to_return
         
