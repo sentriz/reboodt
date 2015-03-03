@@ -71,7 +71,7 @@ class UserBot(Bot):
                 for element in command_output:
                     self.say(element)
             else:
-                self.say('plugin {0} returns an unknown object type "{1}"'.format(
+                self.say('error: plugin "{0}" returns an unknown object type "{1}"'.format(
                     plugin.name, type(command_output).__name__))
 
         except Exception as e:
@@ -108,7 +108,7 @@ class UserBot(Bot):
                     self.say("help for {0} {1}:".format(c_or_v, command_for_help))
                     self.say(help_string)
                     return
-        self.say('could not find help for "{0}"'.format(
+        self.say('error: could not find help for "{0}"'.format(
             command_for_help))
 
     def load_help(self):

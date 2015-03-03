@@ -1,7 +1,8 @@
 from files.plugins.__init__ import BasePlugin
 import urllib.request
 import urllib.parse
-from bs4 import BeautifulSoup
+import json
+
 
 class Google(BasePlugin):
 
@@ -11,53 +12,38 @@ class Google(BasePlugin):
         self.command = ".google"
         
     def _google_search(self, query):
-        # Create opener with Google-friendly user agent
-        opener = urllib.request.build_opener()
-        opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-
-        # Open page & generate soup
-        base_url = "http://www.google.com/search?"
+        base_url = 'http://ajax.googleapis.com/ajax/services/search/web?'
         quoted_query = urllib.parse.quote(query)
         url_encoding = {
-            "q": quoted_query
+            "q": quoted_query,
+            "v": "1.0"
         } 
         url = base_url + urllib.parse.urlencode(url_encoding)
-        page = opener.open(url)
-        soup = BeautifulSoup(page)
-
-        # Parse and find
-        # Looks like google contains URLs in <cite> tags.
-        # So for each cite tag on each page (10), print its contents (url)
-        search_div = soup.find(id='search')
-        anchors = search_div.findAll('a')
-        
-        for anchor in anchors:
-            try:
-                link = anchor["href"]
-            except KeyError:
-                continue
                 
-            # skip non-absolute URLs
-            parsed_link = urllib.parse.urlparse(link, 'http')
-            if parsed_link.netloc and 'google' in parsed_link.netloc:
-                continue
-                    
-            # Decode hidden URLs
-            if link.startswith('/url?'):
-                parsed_query = urllib.parse.parse_qs(parsed_link.query)
-                link_list = parsed_query['q']
-                link = link_list[0]
-                yield link
+        response = urllib.request.urlopen(url).read()
+        response_json = json.loads(response.decode())
+        response_data = response_json["responseData"]
+        
+        return response_data
+        
  
     def command_function(self, arguments, sender, channel):
         if not arguments:
             return "please provide a search query"
             
         query = " ".join(arguments)
-        links = self._google_search(query)
+        response_data = self._google_search(query)
         
-        for link in links:
-            yield link
+        results = response_data["results"]
+        result_count = response_data["cursor"]["resultCount"]
+        time = response_data["cursor"]["searchResultTime"]
+
+        yield "{0} results for {1} in {2}s".format(
+            result_count, query, time)
+        for result in results:
+            yield "{1} ({0})".format(
+                result["visibleUrl"], result["titleNoFormatting"]
+            )
         
 classes = (Google,)
         
