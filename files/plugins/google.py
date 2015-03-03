@@ -38,7 +38,7 @@ class Google(BasePlugin):
         result_count = response_data["cursor"]["resultCount"]
         time = response_data["cursor"]["searchResultTime"]
 
-        yield "{0} results for {1} in {2}s".format(
+        yield '{0} results for "{1}" in {2}s'.format(
             result_count, query, time)
         for result in results:
             yield "{1} ({0})".format(
