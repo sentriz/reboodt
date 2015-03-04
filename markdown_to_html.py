@@ -24,4 +24,5 @@ with open(html_file, 'r+') as file:
 
 # write time to file
 with open(html_file, "a") as file:
+    file.write("\n")
     file.write(END_P.format(time=time_string))
