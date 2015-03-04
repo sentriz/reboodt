@@ -1,1 +1,29 @@
-testing
+<p>reboodt is a python <em>3+</em> <a href="http://en.wikipedia.org/wiki/IRC_bot">IRC bot</a> that supports multiple servers, channels, and commands.</p>
+<p>It also supports a "plugin" system to easily add your own commands and "variables" (explained below).</p>
+<h2>Installation</h2>
+<p>modify <code>files.config.py</code> to your liking, then</p>
+<pre><code>python reboodt.py
+</code></pre>
+<h2>Usage</h2>
+<ul>
+<li>commands start with <code>.</code> followed by the command name - eg. <code>.calc</code></li>
+<li>after the command - a string, variable, or a combination of the two can be passed as arguments</li>
+<li>an example of this would be <code>.qr .last</code>, which would generate a QR code of that last message said in the channel</li>
+<li>the arguments don't have to be just a string or just a variable either, they can be mixed up</li>
+<li>eg. <code>.say the current time is .time on the server</code> which would do exactly what you think</li>
+</ul>
+<h2>Commands</h2>
+<p>note: <code>[]</code> denotes optional arguments</p>
+<pre><code>".calc 1 + 2"     ... returns "3"
+".qr string"      ... returns "http://goo.gl/xxxxxx", a qr code of your string
+".insult [user]"  ... returns a shakespearean insult, optionally aimed at a user
+".say string"     ... returns "string", useful if string is a .variable
+".google query"   ... search google for a query
+".help [command]" ... returns help for a command if provided. otherwise, list commands
+".join #channel"  ... joins a #channel
+".quit [message]" ... quit the current server with an optional message
+</code></pre>
+<h2>Variables</h2>
+<pre><code>".time"           ... returns "yyyy/mm/dd hh:mm:ss"
+".last"           ... returns the last message that was said
+</code></pre>
