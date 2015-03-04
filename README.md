@@ -1,6 +1,6 @@
 reboodt is a python *3+* [IRC bot](http://en.wikipedia.org/wiki/IRC_bot) that supports multiple servers, channels, and commands.  
 It also supports a "plugin" system to easily add your own commands and "variables" (explained below).  
-[sentriz.github.io/reboodt](http://sentriz.github.io/reboodt)
+home: [sentriz.github.io/reboodt](http://sentriz.github.io/reboodt)
 
 Installation
 -----------
