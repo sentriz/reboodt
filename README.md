@@ -4,7 +4,7 @@ It also supports a "plugin" system to easily add your own commands and "variable
 
 Installation
 -----------
-modify `files.config.py` to your liking, then
+modify `files/config.py` to your liking, then
 
     python reboodt.py
     
