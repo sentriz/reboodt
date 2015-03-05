@@ -1,5 +1,4 @@
 from files.plugins.__init__ import BasePlugin
-from datetime import datetime
 
 class Calc(BasePlugin):
     """
