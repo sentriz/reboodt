@@ -1,6 +1,9 @@
 # personal reebodt config
 config.my
 
+# temp
+bot_manager.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
