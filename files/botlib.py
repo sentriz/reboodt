@@ -100,7 +100,6 @@ class Bot(threading.Thread):
         self.nick = nick
         self.data = None
         self.last_message = None
-        self.joined = False
         self.network_name = network_name
         self.authentication = authentication
 
@@ -112,17 +111,16 @@ class Bot(threading.Thread):
         self.data = self.protocol.recv()
         string_type = self.get_string_type()
 
-        # Check for and respond to PING requests
+        # check for and respond to PING requests
         if string_type == "PING":
             pong = self.parse_string()["pong"]
             self.protocol.send("PONG " + pong)
 
-            # check to see if the client has joined their
-            # specified channels yet, if not join it
-            if not self.joined:
-                for channel in self.channels:
-                    self.protocol.join(channel)
-                self.joined = True
+            for channel in self.channels:
+                if not channel.startswith("#"):
+                    continue
+                self.protocol.join(channel)
+                print('joined channel "{0}"'.format(channel))
 
         elif string_type in ("PRIVMSG", "command"):
             parsed_string = self.parse_string("PRIVMSG")
@@ -138,13 +136,17 @@ class Bot(threading.Thread):
 
         elif string_type == "NOTICE":
             auth_or_not, password = self.authentication
+            
             if not auth_or_not:
                 return
-            # This nickname is registered.. please choose..
+                
+            # hook NickServ asking for authentication
+            # "this nickname is registered".. "please choose"..
             if not "choose a different" in self.data:
                 return
             self.protocol.privmsg("NickServ", "identify " + password)
             hidden_password = "*"*len(password)
+            
             print("identifed with NickServ with pass", hidden_password)
 
     def parse_string(self, to_get=None, string=None):
