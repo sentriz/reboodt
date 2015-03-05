@@ -10,19 +10,28 @@ class BasePlugin:
         
     def _shorten_url(self, url):
         post_url = 'https://www.googleapis.com/urlshortener/v1/url'
-        postdata = {
+        post_data = {
             'longUrl': url
         }
         headers = {
             'Content-Type': 'application/json'
         }
+        
+        json_post_data = json.dumps(post_data)
+        encoded_post_data = str(json_post_data).encode()
         req = urllib.request.Request(
             post_url,
-            str(json.dumps(postdata)).encode(),
+            encoded_post_data,
             headers
         )
-        returned = urllib.request.urlopen(req).read()
-        return json.loads(returned.decode())['id']
+        
+        opened_url = urllib.request.urlopen(req)
+        opened_url_data = opened_url.read()
+        decoded_data = opened_url_data.decode()
+        json_data = json.loads(decoded_data)
+        url = json_data["id"]
+        
+        return url
         
 class BaseVariable:
 
