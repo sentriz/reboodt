@@ -1,4 +1,4 @@
-# Based on Alec Hussey's ByBotlib
+# Based on Alec Hussey's PyBotlib
 
 import socket
 from collections import OrderedDict
