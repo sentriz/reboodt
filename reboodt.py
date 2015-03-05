@@ -64,15 +64,16 @@ class UserBot(Bot):
             evaluated_arguments = self._evaluate_arguments(arguments)
             command_output = plugin.command_function(
                 evaluated_arguments, sender, channel)
+            command_output_type = type(command_output).__name__
                 
-            if type(command_output).__name__ == "str":
-                self.say(command_output)
-            elif type(command_output).__name__ in ("generator", "list"):
+            if command_output_type == "str":
+                print("type was str")
+            elif command_output_type in ("generator", "list"):
                 for element in command_output:
                     self.say(element)
             else:
                 self.say('error: plugin "{0}" returns an unknown object type "{1}"'.format(
-                    plugin.name, type(command_output).__name__))
+                    plugin.name, command_output_type))
 
         except Exception as e:
             self.say("error: {0}".format(str(e).lower()))
