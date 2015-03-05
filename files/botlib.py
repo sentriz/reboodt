@@ -144,6 +144,8 @@ class Bot(threading.Thread):
             if not "choose a different" in self.data:
                 return
             self.protocol.privmsg("NickServ", "identify " + password)
+            hidden_password = "*"*len(password)
+            print("identifed with NickServ with pass", hidden_password)
 
     def parse_string(self, to_get=None, string=None):
 
