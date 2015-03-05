@@ -38,9 +38,9 @@ class Protocol:
         Continue recieving data from the server until
         we have recieved the end of the message
         """
-        while data.find("\r") == -1:
+        while "\r" not in data:
             chunk = self.connection.recv(512).decode()
-            if chunk == None:
+            if not chunk:
                 raise RuntimeError("Connection reset by peer.")
             else:
                 data += chunk
