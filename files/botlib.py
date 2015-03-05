@@ -17,13 +17,14 @@ class Protocol:
         self.connection.connect((server, port))
 
     def send(self, message):
+        """
+        send chunks of the message until the entire
+        message has been sent to the server
+        """
+        
         datasent = 0
         message += "\n"
 
-        """
-        Continue sending chunks of the message until
-        the entire message has been sent to the server
-        """
         while datasent < len(message):
             sent = self.connection.send(message.encode())
             if sent == 0:
@@ -32,12 +33,13 @@ class Protocol:
                 datasent += sent
 
     def recv(self):
-        data = ""
-
         """
-        Continue recieving data from the server until
+        recieve data from the server until
         we have recieved the end of the message
         """
+        
+        data = ""
+        
         while "\r" not in data:
             chunk = self.connection.recv(512).decode()
             if not chunk:
@@ -65,9 +67,12 @@ class Protocol:
         self.send("NICK " + username)
 
     def whois(self, nickname):
+        """
+        pull whois data from server
+        """
+        
         self.send("WHOIS " + nickname)
 
-        # Pull down who is data from server
         data = ""
         while "End of WHOIS" not in data:
             data += self.recv()
@@ -81,14 +86,14 @@ class Protocol:
 
 class Bot(threading.Thread):
     def __init__(self, server, port, channels, nick, network_name, authentication):
-        # Intialize threading
+        # intialize threading
         threading.Thread.__init__(self)
 
-        # Initialize IRC protocol
+        # initialize IRC protocol
         self.protocol = Protocol(server, port)
         self.protocol.identify(nick)
 
-        # Initialize class variables
+        # initialize class variables
         self.server = server
         self.port = port
         self.channels = channels
@@ -100,7 +105,10 @@ class Bot(threading.Thread):
         self.authentication = authentication
 
     def _actions(self):
-        # Recieve incoming data from server
+        """
+        loop that listens and performs defined commands
+        """
+        # recieve incoming data from server
         self.data = self.protocol.recv()
         string_type = self.get_string_type()
 
@@ -109,8 +117,8 @@ class Bot(threading.Thread):
             pong = self.parse_string()["pong"]
             self.protocol.send("PONG " + pong)
 
-            # Check to see if the client has joined their
-            # specirfied channels yet, if not then join it
+            # check to see if the client has joined their
+            # specified channels yet, if not join it
             if not self.joined:
                 for channel in self.channels:
                     self.protocol.join(channel)
@@ -214,50 +222,6 @@ class Bot(threading.Thread):
         self.last_message = message
 
     def run(self):
-        # Start loop and perform user defined actions
+        # start loop and perform user defined actions
         while True:
             self._actions()
-
-class BotManager:
-    def __init__(self):
-        """
-        NOTE:
-        Not exactly sure why I made this a dictionary so
-        let me sit on it for a while.
-        """
-        self.botlist = {}
-
-    def __length__(self):
-        return len(self.botlist)
-
-    def add(self, bot):
-        # Append the given bot to the list
-        nextbot = len(self.botlist) + 1
-        self.botlist[nextbot] = bot
-
-    def remove(self, botid):
-        # Disconnect and delete the given bot number
-        self.botlist[botid].disconnect()
-        del self.botlist[botid]
-
-    def remove_all(self):
-        # Loop through bots disconnecting each
-        for (botid, botobject) in self.botlist:
-            botobject.disconnect()
-
-        # Clear entire bot list
-        self.botlist.clear()
-
-    def send_all(self, message):
-        # Loop through all bots sending each the given message
-        for botid in list(self.botlist.keys()):
-            self.botlist[botid].protocol.send(message)
-
-    def recv_all(self):
-        data = []
-
-        # Recieve data from all bots in list
-        for botid in list(self.botlist.keys()):
-            data.append(self.botlist[botid].protocol.recv())
-
-        return data
