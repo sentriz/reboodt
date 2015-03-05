@@ -67,7 +67,7 @@ class UserBot(Bot):
             command_output_type = type(command_output).__name__
                 
             if command_output_type == "str":
-                print("type was str")
+                self.say(command_output)
             elif command_output_type in ("generator", "list"):
                 for element in command_output:
                     self.say(element)
