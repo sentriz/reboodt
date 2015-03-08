@@ -1,8 +1,8 @@
-from files.plugins.__init__ import BasePlugin
+from files.plugins.__init__ import BaseCommand
 import random
 import os
 
-class Insult(BasePlugin):
+class Insult(BaseCommand):
     """
     reboodt plugin, a shakespearean insult generator
     (insults from github/0x27/hexchat-shakespeare-insult)

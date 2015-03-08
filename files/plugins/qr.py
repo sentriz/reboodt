@@ -1,7 +1,7 @@
-from files.plugins.__init__ import BasePlugin
+from files.plugins.__init__ import BaseCommand
 import urllib.parse
 
-class QR(BasePlugin):
+class QR(BaseCommand):
     """
     reboodt plugin for creating a qr code from a string
     usage: .qr [string for qr code]

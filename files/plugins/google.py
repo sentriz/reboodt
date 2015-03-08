@@ -1,10 +1,10 @@
-from files.plugins.__init__ import BasePlugin
+from files.plugins.__init__ import BaseCommand
 import urllib.request
 import urllib.parse
 import json
 
 
-class Google(BasePlugin):
+class Google(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

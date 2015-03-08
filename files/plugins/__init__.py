@@ -1,7 +1,7 @@
 import urllib.request
 import json
 
-class BasePlugin:
+class BaseCommand:
 
     def __init__(self, bot):
         self.name = type(self).__name__
