@@ -7,6 +7,7 @@
 ".join #channel" ... joins a #channel
 ".quit [message]" ... quit the current server with an optional message
 ".help [command]" ... display help for a command if provided. otherwise, list commands
+".reload"         ... reload all plugins in the plugins directory
 #variable
 ".time" ... returns "yyyy/mm/dd hh:mm:ss"
 ".last" ... returns the last message that was said

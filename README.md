@@ -29,6 +29,7 @@ note: `[]` denotes optional arguments
     ".help [command]" ... returns help for a command if provided. otherwise, list commands
     ".join #channel"  ... joins a #channel
     ".quit [message]" ... quit the current server with an optional message
+    ".reload"         ... reload all plugins in the plugins directory
 
 Variables
 -----------
