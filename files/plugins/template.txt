@@ -1,13 +1,13 @@
 """
 template.txt, make a copy of this file and modify it
 to make a plugin.
-* see BasePlugin also for other features
+* see BaseCommand also for other features
 """
 
-from files.plugins.__init__ import BasePlugin
+from files.plugins.__init__ import BaseCommand
 # import anything else you need
 
-class YourPluginName(BasePlugin):
+class YourPluginName(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

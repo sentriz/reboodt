@@ -1,6 +1,6 @@
-from files.plugins.__init__ import BasePlugin
+from files.plugins.__init__ import BaseCommand
 
-class Calc(BasePlugin):
+class Calc(BaseCommand):
     """
     reboodt plugin using the frink calculator
     usage: .c 5 + 2

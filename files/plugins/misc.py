@@ -1,6 +1,6 @@
-from files.plugins.__init__ import BasePlugin
+from files.plugins.__init__ import BaseCommand
 
-class Say(BasePlugin):
+class Say(BaseCommand):
     """
     reboodt plugin, say a string given
     usage: .say this is a string
