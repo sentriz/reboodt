@@ -6,8 +6,6 @@ import sys
 import time
 import random
 import string
-import threading
-import files.config as config
 
 class Protocol:
     def __init__(self, server, port=6667):
@@ -84,11 +82,8 @@ class Protocol:
         #self.connection.shutdown(socket.SHUT_RDWR)
         #self.connection.close()
 
-class Bot(threading.Thread):
+class Bot():
     def __init__(self, server, port, channels, nick, network_name, authentication):
-        # intialize threading
-        threading.Thread.__init__(self)
-
         # initialize IRC protocol
         self.protocol = Protocol(server, port)
         self.protocol.identify(nick)
