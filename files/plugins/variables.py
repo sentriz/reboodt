@@ -32,7 +32,7 @@ class Last(BaseVariable):
         self.variable = ".last"
 
     def variable_function(self):
-        last_message = self.bot.last_message
+        last_message = self.bot.last_channel_message
         if last_message:
             return last_message
         else:
