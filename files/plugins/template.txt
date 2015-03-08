@@ -16,8 +16,8 @@ class YourPluginName(BasePlugin):
         self.command = ".command"
  
     def command_function(self, arguments, sender, channel):
-        # modify(arguments)
-        string_to_return = ""
+        # self._use(arguments) = string_to_return
+        string_to_return = "change me"
         return string_to_return
         
 classes = (YourPluginName,)
