@@ -120,12 +120,17 @@ class Bot():
         elif self.last_command_type in ("message", "user_command"):
             # force "message" in case last_command_type is "command"
             parsed_command = self.parse_raw_command(parse_for="message")
-            print("[{0}][{1}] <{2}> {3}".format(
-                self.network_name,
+            
+            # ignore possibly junky startup messages
+            if not parsed_command["target"].startswith("#"):
+                return
+                
+            self.cprint("[{0}] <{1}> {2}".format(
                 parsed_command["target"],
                 parsed_command["sender"],
                 parsed_command["message"]
             ))
+            
             # add the message to self.last_channel_message, 
             # but not if it was a command
             if not self.last_command_type == "user_command":
@@ -144,7 +149,7 @@ class Bot():
             self.protocol.privmsg("NickServ", "identify " + password)
             hidden_password = "*"*len(password)
             
-            print("identifed with NickServ with pass", hidden_password)
+            self.cprint("identifed with NickServ with pass", hidden_password)
             
     def _join_channels(self):
 
@@ -152,7 +157,7 @@ class Bot():
             if not channel.startswith("#"):
                 continue
             self.protocol.join(channel)
-            print('joined channel "{0}"'.format(channel))
+            self.cprint('joined channel "{0}"'.format(channel))
 
     def parse_raw_command(self, parse_for=None, raw_command=None):
 
@@ -219,13 +224,16 @@ class Bot():
             channel = parsed_string["target"]
 
         self.protocol.privmsg(channel, message)
-        print("[{0}][{1}] <{2}> {3}".format(
-            self.network_name,
+        self.cprint("[{0}] <{1}> {2}".format(
             channel,
             self.nick,
             message
         ))
         self.last_channel_message = message
+    
+    def cprint(self, *message):
+        full_message = " ".join(message)
+        print("{0}: {1}".format(self.network_name, full_message))
 
     def run(self):
         """
