@@ -119,7 +119,7 @@ class Bot():
 
         elif self.last_command_type in ("message", "user_command"):
             # force "message" in case last_command_type is "command"
-            parsed_command = self.parse_raw_command(parse_for="message")
+            parsed_command = self._parse_raw_command(parse_for="message")
             
             # ignore possibly junky startup messages
             if not parsed_command["target"].startswith("#"):
@@ -159,10 +159,10 @@ class Bot():
             self.protocol.join(channel)
             self.cprint('joined channel "{0}"'.format(channel))
 
-    def parse_raw_command(self, parse_for=None, raw_command=None):
+    def _parse_raw_command(self, parse_for=None, raw_command=None):
 
         raw_command = raw_command or self.data
-        parse_for = parse_for or self.get_raw_command_type(raw_command)
+        parse_for = parse_for or self._get_raw_command_type(raw_command)
 
         to_parse = {
             'message': {
@@ -193,7 +193,7 @@ class Bot():
                 to_return[part] = parse(raw_command)
             return to_return
 
-    def get_raw_command_type(self, raw_command=None):
+    def _get_raw_command_type(self, raw_command=None):
     
         raw_command = raw_command or self.data
         
@@ -220,7 +220,7 @@ class Bot():
     def say(self, message, channel=None):
     
         if not channel:
-            parsed_string = self.parse_raw_command(parse_for="message")
+            parsed_string = self._parse_raw_command(parse_for="message")
             channel = parsed_string["target"]
 
         self.protocol.privmsg(channel, message)
@@ -246,8 +246,8 @@ class Bot():
             self.data = self.protocol.recv()
             
             # PRIVMSG, NOTICE, ect.
-            self.last_command_type = self.get_raw_command_type()
-            self.last_command_parsed = self.parse_raw_command(
+            self.last_command_type = self._get_raw_command_type()
+            self.last_command_parsed = self._parse_raw_command(
                 self.last_command_type)
                 
             # perform basic actions like pong, ect.
