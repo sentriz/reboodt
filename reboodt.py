@@ -1,8 +1,8 @@
 from files.botlib import Bot
 import files.config as config
 import threading
-
 import imp
+import time
 import os
 
 class UserBot(Bot):
@@ -16,9 +16,6 @@ class UserBot(Bot):
         self.variables = {}
         self.help = {}
         
-        self._load_plugins()
-        self._load_help()
-
     def _actions(self):
         """
         loop that listens and performs user defined commands
@@ -26,14 +23,13 @@ class UserBot(Bot):
 
         super()._actions()
 
-        if not self.get_string_type() == "command":
+        if not self.last_command_type == "user_command":
             return
 
-        parsed_string = self.parse_string()
-        command = parsed_string["command"]
-        sender = parsed_string["sender"]
-        arguments = parsed_string["arguments"]
-        channel = parsed_string["channel"]
+        command = self.last_command_parsed["command"]
+        sender = self.last_command_parsed["sender"]
+        arguments = self.last_command_parsed["arguments"]
+        channel = self.last_command_parsed["channel"]
 
         if command == ".join" and sender in config.admins:
             channels = arguments
@@ -47,6 +43,11 @@ class UserBot(Bot):
             reason = " ".join(arguments)
             reason = reason or "disconnect"
             self.protocol.disconnect(reason)
+            
+        elif command == ".reload" and sender in config.admins:
+            self.load_plugins()
+            self.say("plugins reloaded")
+            return
 
         elif command == ".help":
             if not arguments:
@@ -84,7 +85,7 @@ class UserBot(Bot):
         except Exception as e:
             self.say("error: {0}".format(str(e).lower()))
             self.say("     - {0}".format(str(e.__doc__).lower()))
-            #raise
+            raise
 
 
     def _evaluate_arguments(self, arguments):
@@ -118,7 +119,7 @@ class UserBot(Bot):
         self.say('error: could not find help for "{0}"'.format(
             command_for_help))
 
-    def _load_help(self):
+    def load_help(self):
         current_folder = os.path.dirname(__file__)
         help_file = os.path.join(current_folder, "files", "help.txt")
 
@@ -132,7 +133,7 @@ class UserBot(Bot):
                     self.help[c_or_v] = list = []
                 list.append(line)
 
-    def _load_plugins(self):
+    def load_plugins(self):
         """
         load all plugins in the "plugins" directory and add
         the command and variable functions in them to self.commands
@@ -177,6 +178,12 @@ if __name__ == "__main__":
             network_name = server["name"],
             authentication = server["auth"]
         )
+        
+        reboodt.load_plugins()
+        reboodt.load_help()
 
         server_thread = threading.Thread(None, reboodt.run)
         server_thread.start()
+
+    while True:
+        time.sleep(5)

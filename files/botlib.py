@@ -1,7 +1,6 @@
 # Based on Alec Hussey's PyBotlib
 
 import socket
-from collections import OrderedDict
 import sys
 import time
 import random
@@ -84,52 +83,55 @@ class Protocol:
 
 class Bot():
     def __init__(self, server, port, channels, nick, network_name, authentication):
-        # initialize IRC protocol
+        # initialise IRC protocol
         self.protocol = Protocol(server, port)
         self.protocol.identify(nick)
 
-        # initialize class variables
+        # initialise class variables
         self.server = server
         self.port = port
         self.channels = channels
         self.nick = nick
-        self.data = None
-        self.last_message = None
+        
+        self.in_channels = False
         self.network_name = network_name
         self.authentication = authentication
+        
+        # initialise raw / command type / channel strings
+        self.data = ""
+        self.last_command_type = ""
+        self.last_command_parsed = {}
+        self.last_channel_message = ""
 
     def _actions(self):
         """
         loop that listens and performs defined commands
         """
-        # recieve incoming data from server
-        self.data = self.protocol.recv()
-        string_type = self.get_string_type()
 
         # check for and respond to PING requests
-        if string_type == "PING":
-            pong = self.parse_string()["pong"]
+        if self.last_command_type == "ping":
+            pong = self.last_command_parsed["pong"]
             self.protocol.send("PONG " + pong)
+            
+            if not self.in_channels:
+                self._join_channels()
+                self.in_channels = True
 
-            for channel in self.channels:
-                if not channel.startswith("#"):
-                    continue
-                self.protocol.join(channel)
-                print('joined channel "{0}"'.format(channel))
-
-        elif string_type in ("PRIVMSG", "command"):
-            parsed_string = self.parse_string("PRIVMSG")
+        elif self.last_command_type in ("message", "command"):
+            # force "message" in case last_command_type is "command"
+            parsed_command = self.parse_raw_command(parse_for="message")
             print("[{0}][{1}] <{2}> {3}".format(
                 self.network_name,
-                parsed_string["target"],
-                parsed_string["sender"],
-                parsed_string["message"]
+                parsed_command["target"],
+                parsed_command["sender"],
+                parsed_command["message"]
             ))
-            if string_type == "PRIVMSG":
-                non_command_message = parsed_string["message"]
-                self.last_message = non_command_message
+            # add the message to self.last_channel_message, 
+            # but not if it was a command
+            if not self.last_command_type == "command":
+                self.last_channel_message = parsed_command["message"]
 
-        elif string_type == "NOTICE":
+        elif self.last_command_type == "notice":
             auth_or_not, password = self.authentication
             
             if not auth_or_not:
@@ -143,28 +145,33 @@ class Bot():
             hidden_password = "*"*len(password)
             
             print("identifed with NickServ with pass", hidden_password)
+            
+    def _join_channels(self):
 
-    def parse_string(self, to_get=None, string=None):
+        for channel in self.channels:
+            if not channel.startswith("#"):
+                continue
+            self.protocol.join(channel)
+            print('joined channel "{0}"'.format(channel))
 
-        if not string:
-            string = self.data
+    def parse_raw_command(self, parse_for=None, raw_command=None):
 
-        if not to_get:
-            to_get = self.get_string_type(string)
+        raw_command = raw_command or self.data
+        parse_for = parse_for or self.get_raw_command_type(raw_command)
 
         to_parse = {
-            'PRIVMSG': {
+            'message': {
                 'message':   lambda s: s.split(" :")[-1].replace("\r\n", ""),
                 'sender':    lambda s: s[1:].split("!")[0],
                 'target':    lambda s: s.split()[2]
             },
-            'PING': {
+            'ping': {
                 'pong':      lambda s: s.split()[1].rstrip()
             },
-            'NOTICE': {
+            'notice': {
                 'message':   lambda s: " ".join(s.split()[3:])[1:]
             },
-            'command': {
+            'user_command': {
                 'command':   lambda s: s.split(" :")[1].split()[0],
                 'arguments': lambda s: s.split(" :")[1].split()[1:],
                 'channel':   lambda s: s.split()[2],
@@ -175,40 +182,40 @@ class Bot():
             }
         }
 
-        if to_get in to_parse:
+        if parse_for in to_parse:
             to_return = {}
-            for part, parse in to_parse[to_get].items():
-                try:
-                    to_return[part] = parse(string)
-                except KeyError:
-                    return None
+            for part, parse in to_parse[parse_for].items():
+                to_return[part] = parse(raw_command)
             return to_return
 
-    def get_string_type(self, string=None):
-
-        if not string:
-            string = self.data
-
-        types = OrderedDict([
-            ("PING",     (lambda s: s.split(" :")[0], "PING")),
-            ("command",  (lambda s: s.split()[3][1], ".")),
-            ("PRIVMSG",  (lambda s: s.split()[1], "PRIVMSG")),
-            ("motd",     (lambda s: s.split()[1], "372")),
-            ("NOTICE",   (lambda s: s.split()[1], "NOTICE"))
-        ])
-
-        for type, (find_type, correct_type) in types.items():
+    def get_raw_command_type(self, raw_command=None):
+    
+        raw_command = raw_command or self.data
+        
+        # not using dictionary because order is important here
+        # "user_command" must always come before "message"
+        types = (
+            # (type to return, type finder, raw type comparison)
+            ("ping", lambda s: s.split(" :")[0], "PING"),
+            ("user_command", lambda s: s.split()[3][1], "."),
+            ("message", lambda s: s.split()[1], "PRIVMSG"),
+            ("motd", lambda s: s.split()[1], "372"),
+            ("notice", lambda s: s.split()[1], "NOTICE")
+        )
+        
+        for type_name, find_type, raw_type in types:
             try:
-                result = find_type(string)
+                result = find_type(raw_command)
             except IndexError:
                 continue
             else:
-                if result == correct_type:
-                    return type
+                if result == raw_type:
+                    return type_name
 
     def say(self, message, channel=None):
+    
         if not channel:
-            parsed_string = self.parse_string("PRIVMSG")
+            parsed_string = self.parse_raw_command(parse_for="message")
             channel = parsed_string["target"]
 
         self.protocol.privmsg(channel, message)
@@ -218,9 +225,22 @@ class Bot():
             self.nick,
             message
         ))
-        self.last_message = message
+        self.last_channel_message = message
 
     def run(self):
-        # start loop and perform user defined actions
+        """
+        main bot run method, loops and parses IRC commands
+        """  
+        
+        # listen
         while True:
+            # receive incoming data from server
+            self.data = self.protocol.recv()
+            
+            # PRIVMSG, NOTICE, ect.
+            self.last_command_type = self.get_raw_command_type()
+            self.last_command_parsed = self.parse_raw_command(
+                self.last_command_type)
+                
+            # perform basic actions like pong, ect.
             self._actions()
