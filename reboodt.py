@@ -61,18 +61,15 @@ class UserBot(Bot):
             return
 
         plugin = self.commands[command]
-
         if plugin.needs_admin and sender not in config.admins:
             sorry_string = "sorry, you need to be an admin to use the {0} plugin"
             self.protocol.privmsg(sender, sorry_string.format(plugin.name))
             return
 
         evaluated_arguments = self._evaluate_arguments(arguments)
-        
         try:
             command_output = plugin.command_function(
                 evaluated_arguments, sender, channel)
-
         except Exception as e:
             self.say("error: {0}".format(str(e).lower()))
             self.say("     - {0}".format(str(e.__doc__).lower()))
@@ -82,11 +79,9 @@ class UserBot(Bot):
         command_output_type = type(command_output).__name__
         if command_output_type == "str":
             self.say(command_output)
-            
         elif command_output_type in ("generator", "list"):
             for element in command_output:
                 self.say(element)
-                
         else:
             self.say('error: plugin "{0}" returns an unknown object type "{1}"'.format(
                 plugin.name, command_output_type))

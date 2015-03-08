@@ -117,7 +117,7 @@ class Bot():
                 self._join_channels()
                 self.in_channels = True
 
-        elif self.last_command_type in ("message", "command"):
+        elif self.last_command_type in ("message", "user_command"):
             # force "message" in case last_command_type is "command"
             parsed_command = self.parse_raw_command(parse_for="message")
             print("[{0}][{1}] <{2}> {3}".format(
@@ -128,7 +128,7 @@ class Bot():
             ))
             # add the message to self.last_channel_message, 
             # but not if it was a command
-            if not self.last_command_type == "command":
+            if not self.last_command_type == "user_command":
                 self.last_channel_message = parsed_command["message"]
 
         elif self.last_command_type == "notice":
