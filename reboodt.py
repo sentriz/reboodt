@@ -38,14 +38,17 @@ class UserBot(Bot):
                 return
             for channel_ in channels:
                 self.protocol.join(channel_)
+            return
 
         elif command == ".quit" and sender in config.admins:
             reason = " ".join(arguments)
             reason = reason or "disconnect"
             self.protocol.disconnect(reason)
+            return
             
         elif command == ".reload" and sender in config.admins:
             self.load_plugins()
+            self.load_help()
             self.say("plugins reloaded")
             return
 
@@ -56,6 +59,7 @@ class UserBot(Bot):
             else:
                 command_for_help = arguments[0]
                 self._get_help(command_for_help)
+            return
 
         if not command in self.commands:
             return
@@ -121,7 +125,8 @@ class UserBot(Bot):
 
     def load_help(self):
         current_folder = os.path.dirname(__file__)
-        help_file = os.path.join(current_folder, "files", "help.txt")
+        help_file_name = "help.txt"
+        help_file = os.path.join(current_folder, "files", help_file_name)
 
         with open(help_file) as file:
             for line in file:
@@ -132,6 +137,8 @@ class UserBot(Bot):
                 if c_or_v not in self.help:
                     self.help[c_or_v] = list = []
                 list.append(line)
+                
+        self.cprint('loaded help from "{0}"'.format(help_file_name))
 
     def load_plugins(self):
         """
