@@ -136,7 +136,7 @@ class Bot():
             
             if not auth_or_not:
                 return
-                
+
             # hook NickServ asking for authentication
             # "this nickname is registered".. "please choose"..
             if not "choose a different" in self.data:
