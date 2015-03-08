@@ -1,5 +1,6 @@
 from files.botlib import Bot
 import files.config as config
+import threading
 
 import imp
 import os
@@ -8,10 +9,15 @@ class UserBot(Bot):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        print("initiating {0} bot".format(self.network_name))
 
         self.commands = {}
         self.variables = {}
         self.help = {}
+        
+        self._load_plugins()
+        self._load_help()
 
     def _actions(self):
         """
@@ -65,7 +71,7 @@ class UserBot(Bot):
             command_output = plugin.command_function(
                 evaluated_arguments, sender, channel)
             command_output_type = type(command_output).__name__
-                
+
             if command_output_type == "str":
                 self.say(command_output)
             elif command_output_type in ("generator", "list"):
@@ -112,7 +118,7 @@ class UserBot(Bot):
         self.say('error: could not find help for "{0}"'.format(
             command_for_help))
 
-    def load_help(self):
+    def _load_help(self):
         current_folder = os.path.dirname(__file__)
         help_file = os.path.join(current_folder, "files", "help.txt")
 
@@ -126,7 +132,7 @@ class UserBot(Bot):
                     self.help[c_or_v] = list = []
                 list.append(line)
 
-    def load_plugins(self):
+    def _load_plugins(self):
         """
         load all plugins in the "plugins" directory and add
         the command and variable functions in them to self.commands
@@ -154,20 +160,23 @@ class UserBot(Bot):
                     self.commands[plugin.command] = plugin
                 print('loaded plugin "{0}" from file "{1}"'.format(
                     plugin.name, file))
-                    
-                    
+
+
 if __name__ == "__main__":
-        
+
     for server in config.servers:
-        if server["connect"]:
-            reboodt = UserBot(
-                server["host"],
-                server["port"],
-                server["chans"],
-                server["nick"],
-                server["name"],
-                server["auth"]
-            )
-            reboodt.load_plugins()
-            reboodt.load_help()
-            reboodt.run()
+
+        if not server["connect"]:
+            continue
+
+        reboodt = UserBot(
+            server = server["host"],
+            port = server["port"],
+            channels = server["chans"],
+            nick = server["nick"],
+            network_name = server["name"],
+            authentication = server["auth"]
+        )
+
+        server_thread = threading.Thread(None, reboodt.run)
+        server_thread.start()
