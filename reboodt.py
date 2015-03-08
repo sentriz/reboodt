@@ -49,7 +49,7 @@ class UserBot(Bot):
         elif command == ".reload" and sender in config.admins:
             self.load_plugins()
             self.load_help()
-            self.say("plugins reloaded")
+            self.say("plugins/help file reloaded")
             return
 
         elif command == ".help":
@@ -127,6 +127,8 @@ class UserBot(Bot):
         current_folder = os.path.dirname(__file__)
         help_file_name = "help.txt"
         help_file = os.path.join(current_folder, "files", help_file_name)
+        
+        self.help = {}
 
         with open(help_file) as file:
             for line in file:
@@ -138,7 +140,7 @@ class UserBot(Bot):
                     self.help[c_or_v] = list = []
                 list.append(line)
                 
-        self.cprint('loaded help from "{0}"'.format(help_file_name))
+        self.cprint('loaded help from file "{0}"'.format(help_file_name))
 
     def load_plugins(self):
         """
