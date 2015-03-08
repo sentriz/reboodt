@@ -10,7 +10,7 @@ class UserBot(Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        print("initiating {0} bot".format(self.network_name))
+        self.cprint("initialising bot")
 
         self.commands = {}
         self.variables = {}
@@ -107,6 +107,7 @@ class UserBot(Bot):
         return arguments_to_return
 
     def _get_help(self, command):
+    
         command_for_help = "." + command
         for c_or_v, list in self.help.items():
             for help_string in list:
@@ -114,6 +115,7 @@ class UserBot(Bot):
                     self.say("help for {0} {1}:".format(c_or_v, command_for_help))
                     self.say(help_string)
                     return
+                    
         self.say('error: could not find help for "{0}"'.format(
             command_for_help))
 
@@ -157,7 +159,7 @@ class UserBot(Bot):
                     self.variables[plugin.variable] = plugin
                 elif hasattr(plugin, "command"):
                     self.commands[plugin.command] = plugin
-                print('loaded plugin "{0}" from file "{1}"'.format(
+                self.cprint('loaded plugin "{0}" from file "{1}"'.format(
                     plugin.name, file))
 
 
