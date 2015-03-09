@@ -1,9 +1,10 @@
 from lib.bot import Bot
 import config
-import threading
 import imp
-import time
 import os
+import sys
+import threading
+import time
 
 class UserBot(Bot):
 
@@ -173,6 +174,11 @@ class UserBot(Bot):
 
 
 if __name__ == "__main__":
+
+    all_server_bools = [server["connect"] for server in config.servers]
+    if not any(all_server_bools):
+        print("error: no servers enabled to connect to in config.py")
+        sys.exit(1)
 
     for server in config.servers:
 
