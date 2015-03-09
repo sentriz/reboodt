@@ -57,6 +57,7 @@ class UserBot(Bot):
             if not arguments:
                 self.say("commands: " + ", ".join(self.commands))
                 self.say("variables: " + ", ".join(self.variables))
+                self.say('use ".help [command/variable name]" to read more')
             else:
                 command_for_help = arguments[0]
                 self._get_help(command_for_help)
