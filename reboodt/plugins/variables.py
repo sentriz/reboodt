@@ -1,4 +1,4 @@
-from files.plugins.__init__ import BaseVariable
+from plugins.__init__ import BaseVariable
 from datetime import datetime
 
 class Time(BaseVariable):
