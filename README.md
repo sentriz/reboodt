@@ -22,17 +22,20 @@ Commands
 -----------
 note: `[]` denotes optional arguments
 
-    ".calc 1 + 2"     ... returns "3"
-    ".qr string"      ... returns "http://goo.gl/xxxxxx", a qr code of your string
-    ".insult [user]"  ... returns a shakespearean insult, optionally aimed at a user
-    ".say string"     ... returns "string", useful if string is a .variable
-    ".google query"   ... search google for a query
-    ".help [command]" ... returns help for a command if provided. otherwise, list commands
-    ".join #channel"  ... joins a #channel
-    ".quit [message]" ... quit the current server with an optional message
-    ".reload"         ... reload all plugins in the plugins directory
+    ".py [expression]"  ... evaluate a python expression, eg. "len([1, 2])" returns "2"
+    ".calc 1 + 2"       ... returns "3"
+    ".google query"     ... search google for a query
+    ".help [command]"   ... returns help for a command if provided. otherwise, list commands
+    ".insult [user]"    ... returns a shakespearean insult, optionally aimed at a user
+    ".join #channel"    ... joins a #channel
+    ".qr string"        ... returns "http://goo.gl/xxxxxx", a qr code of your string
+    ".quit [message]"   ... quit the current server with an optional message
+    ".reload"           ... reload all plugins in the plugins directory
+    ".say string"       ... returns "string", useful if string is a .variable
 
 Variables
 -----------
-    ".time"           ... returns "yyyy/mm/dd hh:mm:ss"
+
     ".last"           ... returns the last message that was said
+    ".time"           ... returns "yyyy/mm/dd hh:mm:ss"
+	
