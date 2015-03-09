@@ -250,6 +250,7 @@ class Bot():
                 self.data = self.protocol.recv()
             except RuntimeError as error:
                 self.cprint("error: " + error)
+                sys.exit(1)
             
             # PRIVMSG, NOTICE, ect.
             self.last_command_type = self._get_raw_command_type()
