@@ -1,13 +1,16 @@
 """
-template.txt, make a copy of this file and modify it
-to make a plugin.
-* see BaseCommand also for other features
+template.txt, make a copy of this file and modify it to make a plugin.
+* also see BaseCommand and BaseVariable for other features
 """
 
-from files.plugins.__init__ import BaseCommand
+# if you're creating a command
+from plugins.__init__ import BaseCommand 
+# if you're creating a variable
+from plugins.__init__ import BaseVariable
+
 # import anything else you need
 
-class YourPluginName(BaseCommand):
+class YourCommandName(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,7 +23,22 @@ class YourPluginName(BaseCommand):
         string_to_return = "change me"
         return string_to_return
         
-classes = (YourPluginName,)
+class YourVariableName(BaseVariable):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # change to your variable, eg. ".x"
+        self.variable = ".x"
+
+    def variable_function(self):
+        # self._use(arguments) = string_to_return
+        string_to_return = "change me"
+        return string_to_return
+        
+# ensure this is changed to "classes = (Class,)" if 
+# there is only one class
+classes = (YourCommandName, YourVariableName)
         
 if __name__ == "__main__":
     for class_ in classes:
