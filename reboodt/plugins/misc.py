@@ -1,4 +1,4 @@
-from files.plugins.__init__ import BaseCommand
+from plugins.__init__ import BaseCommand
 
 class Say(BaseCommand):
     """

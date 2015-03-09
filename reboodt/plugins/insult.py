@@ -1,4 +1,4 @@
-from files.plugins.__init__ import BaseCommand
+from plugins.__init__ import BaseCommand
 import random
 import os
 
@@ -24,7 +24,7 @@ class Insult(BaseCommand):
         current_folder = os.path.dirname(__file__)
         provisional_path = os.path.join(current_folder, os.pardir)
         parent_folder = os.path.abspath(provisional_path)
-        insults_file = os.path.join(parent_folder, "insults.txt")
+        insults_file = os.path.join(parent_folder, "files", "insults.txt")
 
         with open(insults_file) as file:
             for line in file:

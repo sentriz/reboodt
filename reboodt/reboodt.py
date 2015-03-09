@@ -1,5 +1,5 @@
-from files.botlib import Bot
-import files.config as config
+from lib.bot import Bot
+import config
 import threading
 import imp
 import time
@@ -150,7 +150,7 @@ class UserBot(Bot):
         """
 
         current_folder = os.path.dirname(__file__)
-        plugin_folder = os.path.join(current_folder, "files", "plugins")
+        plugin_folder = os.path.join(current_folder, "plugins")
 
         for file in os.listdir(plugin_folder):
 
