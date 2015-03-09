@@ -4,7 +4,7 @@ home: [sentriz.github.io/reboodt](http://sentriz.github.io/reboodt)
 
 Installation
 -----------
-modify `files/config.py` to your liking, then
+modify `config.py` to your liking, then
 
     python reboodt.py
     
@@ -15,6 +15,7 @@ Usage
   - an example of this would be `.qr .last`, which would generate a QR code of that last message said in the channel
 - the arguments don't have to be just a string or just a variable either, they can be mixed up
   - eg. `.say the current time is .time on the server` which would do exactly what you think
+- to create a command/variable - make a copy of `files/template.txt` for dir `plugins/`, and rename to `plugin.py`
 
 
 Commands
