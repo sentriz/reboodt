@@ -38,9 +38,12 @@ class Protocol:
         data = ""
         
         while "\r" not in data:
-            chunk = self.connection.recv(512).decode()
+            try:
+                chunk = self.connection.recv(512).decode()
+            except TimeoutError:
+                raise RuntimeError("connection timed out")
             if not chunk:
-                raise RuntimeError("Connection reset by peer.")
+                raise RuntimeError("connection reset by peer")
             else:
                 data += chunk
 
@@ -243,7 +246,10 @@ class Bot():
         # listen
         while True:
             # receive incoming data from server
-            self.data = self.protocol.recv()
+            try:
+                self.data = self.protocol.recv()
+            except RuntimeError as error:
+                self.cprint("error: " + error)
             
             # PRIVMSG, NOTICE, ect.
             self.last_command_type = self._get_raw_command_type()
