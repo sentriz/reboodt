@@ -24,6 +24,8 @@ class Python(BaseCommand):
         
     def command_function(self, arguments, sender, channel):
         string = " ".join(arguments)
+        if not string:
+            return "please provide a valid python expression"
         result = self._evaluate(string)
         return result
         
