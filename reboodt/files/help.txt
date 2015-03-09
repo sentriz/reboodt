@@ -1,13 +1,14 @@
 #command
 ".calc 1 + 2" ... returns "3"
-".qr string" ... returns "http://goo.gl/xxxxxx", a qr code of your string
-".insult [user]" ... returns a shakespearean insult, optionally aimed at a user
-".say string" ... returns "string", useful if string is a .variable
 ".google query" ... search google for a query
-".join #channel" ... joins a #channel
-".quit [message]" ... quit the current server with an optional message
 ".help [command]" ... display help for a command if provided. otherwise, list commands
+".insult [user]" ... returns a shakespearean insult, optionally aimed at a user
+".join #channel" ... joins a #channel
+".py [expression]" ... evaluate a python expression, eg. "len([1, 2])" returns "2"
+".qr string" ... returns "http://goo.gl/xxxxxx", a qr code of your string
+".quit [message]" ... quit the current server with an optional message
 ".reload" ... reload all plugins in the plugins directory
+".say string" ... returns "string", useful if string is a .variable
 #variable
-".time" ... returns "yyyy/mm/dd hh:mm:ss"
 ".last" ... returns the last message that was said
+".time" ... returns "yyyy/mm/dd hh:mm:ss"
