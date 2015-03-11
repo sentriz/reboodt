@@ -183,8 +183,8 @@ if __name__ == "__main__":
         level=logging.INFO
     )
     
-    all_server_bools = [server["connect"] for server in config.servers]
-    if not any(all_server_bools):
+    enabled_servers = [server["connect"] for server in config.servers]
+    if not any(enabled_servers):
         logging.critical("no servers enabled to connect to in config.py")
         sys.exit(1)
 
