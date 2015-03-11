@@ -80,7 +80,6 @@ class UserBot(Bot):
                 evaluated_arguments, sender, channel)
         except Exception as exc:
             self.say("error: {0}".format(str(exc).lower()))
-            self.say("     - {0}".format(str(exc.__doc__).lower()))
             logger.exception(exc)
             return
             
