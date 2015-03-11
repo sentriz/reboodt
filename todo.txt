@@ -1,0 +1,10 @@
+- add a CLI
+  - options
+    - --no-config
+    - --server
+    - --port
+    - --channels
+    - --nick
+- separate Bot class into two classes
+  - one for parsing and one for actions
+- refactor 
