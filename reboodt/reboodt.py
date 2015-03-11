@@ -8,12 +8,6 @@ import threading
 import time
 
 class UserBot(Bot):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        logging.info('initialising "{0}" bot'.format(
-            self.network_name))
         
     def _actions(self):
         """
