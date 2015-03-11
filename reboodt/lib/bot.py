@@ -5,6 +5,7 @@ import sys
 import time
 import random
 import string
+import logging
 
 class Protocol:
     def __init__(self, server, port=6667):
@@ -128,7 +129,7 @@ class Bot():
             if not parsed_command["target"].startswith("#"):
                 return
                 
-            self.cprint("[{0}] <{1}> {2}".format(
+            logging.info("[{0}] <{1}> {2}".format(
                 parsed_command["target"],
                 parsed_command["sender"],
                 parsed_command["message"]
@@ -152,7 +153,7 @@ class Bot():
             self.protocol.privmsg("NickServ", "identify " + password)
             hidden_password = "*"*len(password)
             
-            self.cprint("identifed with NickServ with pass", hidden_password)
+            logging.info("identifed with NickServ with pass " + hidden_password)
             
     def _join_channels(self):
 
@@ -160,7 +161,7 @@ class Bot():
             if not channel.startswith("#"):
                 continue
             self.protocol.join(channel)
-            self.cprint('joined channel "{0}"'.format(channel))
+            logging.info('joined channel "{0}"'.format(channel))
 
     def _parse_raw_command(self, parse_for=None, raw_command=None):
 
@@ -227,16 +228,12 @@ class Bot():
             channel = parsed_string["target"]
 
         self.protocol.privmsg(channel, message)
-        self.cprint("[{0}] <{1}> {2}".format(
+        logging.info("[{0}] <{1}> {2}".format(
             channel,
             self.nick,
             message
         ))
         self.last_channel_message = message
-    
-    def cprint(self, *message):
-        full_message = " ".join(message)
-        print("{0}: {1}".format(self.network_name, full_message))
 
     def run(self):
         """
@@ -249,7 +246,7 @@ class Bot():
             try:
                 self.data = self.protocol.recv()
             except RuntimeError as error:
-                self.cprint("error: " + error)
+                logging.error(error)
                 sys.exit(1)
             
             # PRIVMSG, NOTICE, ect.
