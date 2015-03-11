@@ -206,5 +206,9 @@ if __name__ == "__main__":
             None, target=reboodt.run, name=server["name"])
         server_thread.start()
     
-    while True:
-        time.sleep(5)
+    try:
+        while True:
+            time.sleep(5)
+    except (SystemExit, KeyboardInterrupt):
+        logging.warning("program was closed")
+        sys.exit()
