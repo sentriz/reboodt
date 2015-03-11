@@ -1,6 +1,7 @@
 from lib.bot import Bot
 import config
 import imp
+import logging
 import os
 import sys
 import threading
@@ -11,11 +12,15 @@ class UserBot(Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.cprint("initialising bot")
+        logging.info('initialising "{0}" bot'.format(
+            self.network_name))
 
         self.commands = {}
         self.variables = {}
         self.help = {}
+        
+        self.load_plugins()
+        self.load_help()
         
     def _actions(self):
         """
@@ -26,6 +31,7 @@ class UserBot(Bot):
 
         if not self.last_command_type == "user_command":
             return
+        print("here")
 
         command = self.last_command_parsed["command"]
         sender = self.last_command_parsed["sender"]
@@ -39,19 +45,16 @@ class UserBot(Bot):
                 return
             for channel_ in channels:
                 self.protocol.join(channel_)
-            return
 
         elif command == ".quit" and sender in config.admins:
             reason = " ".join(arguments)
             reason = reason or "disconnect"
             self.protocol.disconnect(reason)
-            return
             
         elif command == ".reload" and sender in config.admins:
             self.load_plugins()
             self.load_help()
             self.say("plugins/help file reloaded")
-            return
 
         elif command == ".help":
             if not arguments:
@@ -61,7 +64,6 @@ class UserBot(Bot):
             else:
                 command_for_help = arguments[0]
                 self._get_help(command_for_help)
-            return
 
         if not command in self.commands:
             return
@@ -76,10 +78,10 @@ class UserBot(Bot):
         try:
             command_output = plugin.command_function(
                 evaluated_arguments, sender, channel)
-        except Exception as e:
-            self.say("error: {0}".format(str(e).lower()))
-            self.say("     - {0}".format(str(e.__doc__).lower()))
-            raise
+        except Exception as exc:
+            self.say("error: {0}".format(str(exc).lower()))
+            self.say("     - {0}".format(str(exc.__doc__).lower()))
+            logger.exception(exc)
             return
             
         command_output_type = type(command_output).__name__
@@ -89,7 +91,7 @@ class UserBot(Bot):
             for element in command_output:
                 self.say(element)
         else:
-            self.say('error: plugin "{0}" returns an unknown object type "{1}"'.format(
+            self.error('plugin "{0}" returns an unknown object type "{1}"'.format(
                 plugin.name, command_output_type))
 
     def _evaluate_arguments(self, arguments):
@@ -142,7 +144,7 @@ class UserBot(Bot):
                     self.help[c_or_v] = list = []
                 list.append(line)
                 
-        self.cprint('loaded help from file "{0}"'.format(help_file_name))
+        logging.info('loaded help from file "{0}"'.format(help_file_name))
 
     def load_plugins(self):
         """
@@ -170,15 +172,20 @@ class UserBot(Bot):
                     self.variables[plugin.variable] = plugin
                 elif hasattr(plugin, "command"):
                     self.commands[plugin.command] = plugin
-                self.cprint('loaded plugin "{0}" from file "{1}"'.format(
+                logging.info('loaded plugin "{0}" from file "{1}"'.format(
                     plugin.name, file))
-
 
 if __name__ == "__main__":
 
+    logging.basicConfig(
+        format="[%(asctime)s] %(threadName)s: %(message)s", 
+        datefmt="%H:%M:%S", 
+        level=logging.INFO
+    )
+    
     all_server_bools = [server["connect"] for server in config.servers]
     if not any(all_server_bools):
-        print("error: no servers enabled to connect to in config.py")
+        logging.critical("no servers enabled to connect to in config.py")
         sys.exit(1)
 
     for server in config.servers:
@@ -194,12 +201,10 @@ if __name__ == "__main__":
             network_name = server["name"],
             authentication = server["auth"]
         )
-        
-        reboodt.load_plugins()
-        reboodt.load_help()
 
-        server_thread = threading.Thread(None, reboodt.run)
+        server_thread = threading.Thread(
+            None, target=reboodt.run, name=server["name"])
         server_thread.start()
-
+    
     while True:
         time.sleep(5)
