@@ -245,8 +245,8 @@ class Bot():
             # receive incoming data from server
             try:
                 self.data = self.protocol.recv()
-            except RuntimeError as error:
-                logging.error(error)
+            except RuntimeError as exc:
+                logging.exception(exc)
                 sys.exit(1)
             
             # PRIVMSG, NOTICE, ect.
