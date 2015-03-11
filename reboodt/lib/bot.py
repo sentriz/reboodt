@@ -89,6 +89,8 @@ class Protocol:
 class Bot():
     def __init__(self, server, port, channels, 
             nick, network_name, authentication):
+            
+        logging.info('initialising "{0}" bot'.format(network_name))
     
         # initialise IRC protocol
         self.protocol = Protocol(server, port)
@@ -132,8 +134,6 @@ class Bot():
             if not self.in_channels:
                 self._join_channels()
                 self.in_channels = True
-                
-            return
 
         elif self.last_command_type == "notice":
             auth_or_not, password = self.authentication
@@ -146,10 +146,7 @@ class Bot():
             if "choose a different" in self.data:
                 self.protocol.privmsg("NickServ", "identify " + password)
                 hidden_password = "*"*len(password)
-                
                 logging.info("identifed with NickServ with pass " + hidden_password)
-                
-            return
         
         elif self.last_command_type == "message":
             
