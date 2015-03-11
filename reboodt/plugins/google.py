@@ -28,6 +28,9 @@ class Google(BaseCommand):
         
     def _make_results_generator(self, response_data, user_query):       
         results = response_data["results"]
+        if not "resultCount" in response_data["cursor"]:
+            yield 'no result found for "{0}"'.format(user_query)
+            return
         result_count = response_data["cursor"]["resultCount"]
         time = response_data["cursor"]["searchResultTime"]
 
