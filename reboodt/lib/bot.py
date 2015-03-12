@@ -82,10 +82,69 @@ class Protocol:
 
     def disconnect(self, message="disconnect"):
         self.send("QUIT :" + message)
-        time.sleep(5.0)
-        self.connection.shutdown(socket.SHUT_RDWR)
-        self.connection.close()
+        # time.sleep(5.0)
+        # self.connection.shutdown(socket.SHUT_RDWR)
+        # self.connection.close()
 
+class IRCString:
+
+    def __init__(self, raw_string):
+        self.raw_string = raw_string
+            
+    def _parse_string(self, parse_for=None):
+
+        parse_for = parse_for or self._get_string_type()
+
+        to_parse = {
+            'message': {
+                'message':   lambda s: s.split(" :")[-1].replace("\r\n", ""),
+                'sender':    lambda s: s[1:].split("!")[0],
+                'target':    lambda s: s.split()[2]
+            },
+            'ping': {
+                'pong':      lambda s: s.split()[1].rstrip()
+            },
+            'notice': {
+                'message':   lambda s: " ".join(s.split()[3:])[1:]
+            },
+            'user_command': {
+                'command':   lambda s: s.split(" :")[1].split()[0],
+                'arguments': lambda s: s.split(" :")[1].split()[1:],
+                'channel':   lambda s: s.split()[2],
+                'sender':    lambda s: s[1:].split("!")[0]
+            },
+            'motd': {
+                'message':   lambda s: " ".join(s.split()[3:])[1:]
+            }
+        }
+
+        if parse_for in to_parse:
+            to_return = {}
+            for part, parse in to_parse[parse_for].items():
+                to_return[part] = parse(self.raw_string)
+            return to_return
+
+    def _get_string_type(self):
+        
+        # not using dictionary because order is important here
+        # "user_command" must always come before "message"
+        types = (
+            # (type to return, type finder, raw type comparison)
+            ("ping", lambda s: s.split(" :")[0], "PING"),
+            ("user_command", lambda s: s.split()[3][1], "."),
+            ("message", lambda s: s.split()[1], "PRIVMSG"),
+            ("motd", lambda s: s.split()[1], "372"),
+            ("notice", lambda s: s.split()[1], "NOTICE")
+        )
+        
+        for type_name, find_type, raw_type in types:
+            try:
+                result = find_type(self.raw_string)
+            except IndexError:
+                continue
+            else:
+                if result == raw_type:
+                    return type_name
 class Bot():
     def __init__(self, server, port, channels, 
             nick, network_name, authentication):
@@ -116,9 +175,9 @@ class Bot():
         self.load_help()
 
         # initialise raw/command-type/channel strings
-        self.data = ""
-        self.last_command_type = ""
-        self.last_command_parsed = {}
+        self.raw_string = ""
+        self.last_string_type = ""
+        self.last_string_parsed = {}
         self.last_channel_message = ""
         
     def _actions(self):
@@ -127,15 +186,15 @@ class Bot():
         """
 
         # check for and respond to PING requests
-        if self.last_command_type == "ping":
-            pong = self.last_command_parsed["pong"]
+        if self.last_string_type == "ping":
+            pong = self.last_string_parsed["pong"]
             self.protocol.send("PONG " + pong)
             
             if not self.in_channels:
                 self._join_channels()
                 self.in_channels = True
 
-        elif self.last_command_type == "notice":
+        elif self.last_string_type == "notice":
             auth_or_not, password = self.authentication
             
             if not auth_or_not:
@@ -143,35 +202,35 @@ class Bot():
 
             # hook NickServ asking for authentication
             # "this nickname is registered".. "please choose"..
-            if "choose a different" in self.data:
+            if "choose a different" in self.raw_string:
                 self.protocol.privmsg("NickServ", "identify " + password)
                 hidden_password = "*"*len(password)
                 logging.info("identifed with NickServ with pass " + hidden_password)
         
-        elif self.last_command_type == "message":
+        elif self.last_string_type == "message":
             
             # ignore junky startup messages by ensuring
             # - channel starts with "#"
-            if not self.last_command_parsed["target"].startswith("#"):
+            if not self.last_string_parsed["target"].startswith("#"):
                 return
             
             # print command or message
-            self._log_message(**self.last_command_parsed)
+            self._log_message(**self.last_string_parsed)
             
             # add the last message to self.last_channel_message,
-            self.last_channel_message = self.last_command_parsed["message"]
+            self.last_channel_message = self.last_string_parsed["message"]
                 
         # run plugin if message was a command
-        elif self.last_command_type == "user_command":
+        elif self.last_string_type == "user_command":
 
-            if self.last_command_parsed["command"] in self.commands:
-                self._run_plugin(**self.last_command_parsed)
+            if self.last_string_parsed["command"] in self.commands:
+                self._run_plugin(**self.last_string_parsed)
             else:
                 # remap command to message and log because command was not valid
-                target = self.last_command_parsed["channel"]
-                sender = self.last_command_parsed["sender"]
-                message = self.last_command_parsed["command"] + \
-                    " " + " ".join(self.last_command_parsed["arguments"])
+                target = self.last_string_parsed["channel"]
+                sender = self.last_string_parsed["sender"]
+                message = self.last_string_parsed["command"] + \
+                    " " + " ".join(self.last_string_parsed["arguments"])
                 message = message.rstrip()
                 self._log_message(target, sender, message)
     
@@ -214,64 +273,6 @@ class Bot():
                 continue
             self.protocol.join(channel)
             logging.info('joined channel "{0}"'.format(channel))
-
-    def _parse_raw_command(self, parse_for=None, raw_command=None):
-
-        raw_command = raw_command or self.data
-        parse_for = parse_for or self._get_raw_command_type(raw_command)
-
-        to_parse = {
-            'message': {
-                'message':   lambda s: s.split(" :")[-1].replace("\r\n", ""),
-                'sender':    lambda s: s[1:].split("!")[0],
-                'target':    lambda s: s.split()[2]
-            },
-            'ping': {
-                'pong':      lambda s: s.split()[1].rstrip()
-            },
-            'notice': {
-                'message':   lambda s: " ".join(s.split()[3:])[1:]
-            },
-            'user_command': {
-                'command':   lambda s: s.split(" :")[1].split()[0],
-                'arguments': lambda s: s.split(" :")[1].split()[1:],
-                'channel':   lambda s: s.split()[2],
-                'sender':    lambda s: s[1:].split("!")[0]
-            },
-            'motd': {
-                'message':   lambda s: " ".join(s.split()[3:])[1:]
-            }
-        }
-
-        if parse_for in to_parse:
-            to_return = {}
-            for part, parse in to_parse[parse_for].items():
-                to_return[part] = parse(raw_command)
-            return to_return
-
-    def _get_raw_command_type(self, raw_command=None):
-    
-        raw_command = raw_command or self.data
-        
-        # not using dictionary because order is important here
-        # "user_command" must always come before "message"
-        types = (
-            # (type to return, type finder, raw type comparison)
-            ("ping", lambda s: s.split(" :")[0], "PING"),
-            ("user_command", lambda s: s.split()[3][1], "."),
-            ("message", lambda s: s.split()[1], "PRIVMSG"),
-            ("motd", lambda s: s.split()[1], "372"),
-            ("notice", lambda s: s.split()[1], "NOTICE")
-        )
-        
-        for type_name, find_type, raw_type in types:
-            try:
-                result = find_type(raw_command)
-            except IndexError:
-                continue
-            else:
-                if result == raw_type:
-                    return type_name
                     
     def _evaluate_arguments(self, arguments):
         """
@@ -368,8 +369,7 @@ class Bot():
     def say(self, message, channel=None):
     
         if not channel:
-            parsed_string = self._parse_raw_command(parse_for="message")
-            channel = parsed_string["target"]
+            channel = self.last_message_parsed["target"]
         
         # send message
         self.protocol.privmsg(channel, message)
@@ -386,15 +386,19 @@ class Bot():
         while True:
             # receive incoming data from server
             try:
-                self.data = self.protocol.recv()
+                self.raw_string = self.protocol.recv()
             except RuntimeError as exc:
                 logging.exception(exc)
                 sys.exit(1)
-            
+                
             # PRIVMSG, NOTICE, ect.
-            self.last_command_type = self._get_raw_command_type()
-            self.last_command_parsed = self._parse_raw_command(
-                self.last_command_type)
+            irc_string = IRCString(self.raw_string)
+            self.last_string_type = irc_string._get_string_type()
+            self.last_string_parsed = irc_string._parse_string()
+            
+            if self.last_string_type == "user_command":                
+                self.last_message_parsed = irc_string._parse_string(
+                    parse_for="message")
                 
             # perform basic actions like pong, ect.
             self._actions()
