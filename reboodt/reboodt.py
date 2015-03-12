@@ -33,8 +33,7 @@ class UserBot(Bot):
                 self.protocol.join(channel_)
 
         elif command == ".quit" and sender in config.admins:
-            reason = " ".join(arguments)
-            reason = reason or "disconnect"
+            reason = " ".join(arguments) or "disconnect"
             self.protocol.disconnect(reason)
             
         elif command == ".reload" and sender in config.admins:
