@@ -38,4 +38,3 @@ Variables
 
     ".last"           ... returns the last message that was said
     ".time"           ... returns "yyyy/mm/dd hh:mm:ss"
-	
