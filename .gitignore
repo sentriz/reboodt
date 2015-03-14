@@ -1,5 +1,6 @@
 # personal reebodt config
 config.my
+api_keys.my
 
 # temp
 bot_manager.txt
