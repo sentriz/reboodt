@@ -100,7 +100,7 @@ class Bot():
                         self.say(line)
                 else:
                     logging.error('plugin "{0}" returns an unknown object type "{1}"'.format(
-                        plugin.name, command_output_type))
+                            plugin.name, command_output_type))
                 
             else:
                 logging.info('<< "{0}" is not a plugin command'.format(
