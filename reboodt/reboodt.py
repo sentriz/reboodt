@@ -37,7 +37,7 @@ class UserBot(Bot):
             self.protocol.disconnect(reason)
             
         elif command == ".reload" and sender in config.admins:
-            self.plugins.load()
+            self.plugins.load(bot=self)
             self.plugins.load_help()
             self.say("plugins/help file reloaded")
 
