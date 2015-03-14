@@ -1,4 +1,5 @@
 # Bot() based on Alec Hussey's PyBotlib
+# last_channel_message
 
 import config
 from lib.irc import Protocol
@@ -21,7 +22,7 @@ class Bot():
         
         # initialise plugins
         self.plugins = PluginManager()
-        self.plugins.load()
+        self.plugins.load(bot=self)
         self.plugins.load_help()
 
         # initialise class variables
@@ -32,8 +33,9 @@ class Bot():
         self.network_name = network_name
         self.authentication = authentication
 
-        # misc booleans
+        # misc
         self.in_channels = False
+        self.last_message = ""
 
 
     def _actions(self):
@@ -42,15 +44,15 @@ class Bot():
         """
 
         # check for and respond to PING requests
-        if self.last_string_type == "ping":
-            pong = self.last_string_parsed["pong"]
+        if self.string.type == "ping":
+            pong = self.string.parsed["pong"]
             self.protocol.send("PONG " + pong)
 
             if not self.in_channels:
                 self._join_channels()
                 self.in_channels = True
 
-        elif self.last_string_type == "notice":
+        elif self.string.type == "notice":
             auth_or_not, password = self.authentication
 
             if not auth_or_not:
@@ -63,30 +65,32 @@ class Bot():
                 hidden_password = "*"*len(password)
                 logging.info("identifed with NickServ with pass " + hidden_password)
 
-        elif self.last_string_type == "message":
-
+        elif self.string.type == "message":
+            
             # ignore junky startup messages by ensuring
-            # - channel starts with "#"
-            if not self.last_string_parsed["target"].startswith("#"):
+            # channel starts with "#"
+            channel = self.string.parsed["target"]
+            if not channel.startswith("#"):
                 return
 
             # print command or message
-            self._log_message(**self.last_string_parsed)
-
-            # add the last message to self.last_channel_message,
-            self.last_channel_message = self.last_string_parsed["message"]
+            self._log_message(**self.string.parsed)
+            
+            # add the last channel message to self.last_message
+            # this is used by the .last variable
+            self.last_message = self.string.parsed["message"]
 
         # run plugin if message was a command
-        elif self.last_string_type == "user_command":
+        elif self.string.type == "user_command":
 
             logging.info('>> {0} issued command "{1}" from {2}'.format(
-                self.last_string_parsed["sender"], 
-                self.last_message_parsed["message"], 
-                self.last_message_parsed["target"]
+                self.string.command_as_message["sender"], 
+                self.string.command_as_message["message"], 
+                self.string.command_as_message["target"]
                 )
             )
-            if self.last_string_parsed["command"] in self.plugins.commands:
-                command_output = self.plugins.run(**self.last_string_parsed)
+            if self.string.parsed["command"] in self.plugins.commands:
+                command_output = self.plugins.run(**self.string.parsed)
                 command_output_type = type(command_output).__name__
                 
                 if command_output_type == "str":
@@ -100,7 +104,7 @@ class Bot():
                 
             else:
                 logging.info('<< "{0}" is not a plugin command'.format(
-                    self.last_string_parsed["command"]
+                    self.string.parsed["command"]
                     )
                 )
 
@@ -128,19 +132,20 @@ class Bot():
             command_for_help))
 
     def _log_message(self, target, sender, message):
+    
         logging.info("[{target}] <{sender}> {message}".format(
-            **vars()))
+            **locals()))
 
     def say(self, message, channel=None):
 
         if not channel:
-            channel = self.last_message_parsed["target"]
+            channel = self.string.command_as_message["target"]
 
         # send message
         self.protocol.privmsg(channel, message)
         logging.info('<< replied "{0}"'.format(message))
         # update self.last_channel_message
-        self.last_channel_message = message
+        self.last_message = message
 
     def run(self):
         """
@@ -158,12 +163,6 @@ class Bot():
 
             # PRIVMSG, NOTICE, ect.
             self.string = IRCString(self.raw_string)
-            self.last_string_type = self.string._get_type()
-            self.last_string_parsed = self.string._parse()
-
-            if self.last_string_type == "user_command":
-                self.last_message_parsed = self.string._parse(
-                    parse_for="message")
 
             # perform basic actions like pong, ect.
             self._actions()

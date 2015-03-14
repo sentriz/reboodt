@@ -16,13 +16,13 @@ class UserBot(Bot):
 
         super()._actions()
         
-        if not self.last_string_type == "user_command":
+        if not self.string.type == "user_command":
             return
 
-        command = self.last_string_parsed["command"]
-        sender = self.last_string_parsed["sender"]
-        arguments = self.last_string_parsed["arguments"]
-        channel = self.last_string_parsed["channel"]
+        command = self.string.parsed["command"]
+        sender = self.string.parsed["sender"]
+        arguments = self.string.parsed["arguments"]
+        channel = self.string.parsed["channel"]
 
         if command == ".join" and sender in config.admins:
             channels = arguments
