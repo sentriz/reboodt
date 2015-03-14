@@ -31,10 +31,12 @@ class Calc(BaseCommand):
         string = string.replace("+", "plus")
         results = self._calculate(string).split(";")
         
-        left = results[0]
-        right = results[1]
-        
-        yield "{0} = {1}".format(left, right)
+        if len(results) >= 2:
+            left = results[0]
+            right = results[1]
+            return "{0} = {1}".format(left, right)
+        else:
+            return "no results found"
         
 classes = (Calc,)
         
