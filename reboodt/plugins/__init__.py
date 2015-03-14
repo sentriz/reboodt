@@ -7,7 +7,7 @@ class BaseCommand:
         self.name = type(self).__name__
         self.bot = bot
         self.needs_admin = False
-        
+
     def _shorten_url(self, url):
         post_url = 'https://www.googleapis.com/urlshortener/v1/url'
         post_data = {
@@ -16,7 +16,7 @@ class BaseCommand:
         headers = {
             'Content-Type': 'application/json'
         }
-        
+
         json_post_data = json.dumps(post_data)
         encoded_post_data = str(json_post_data).encode()
         req = urllib.request.Request(
@@ -24,17 +24,23 @@ class BaseCommand:
             encoded_post_data,
             headers
         )
-        
+
         opened_url = urllib.request.urlopen(req)
         opened_url_data = opened_url.read()
         decoded_data = opened_url_data.decode()
         json_data = json.loads(decoded_data)
         url = json_data["id"]
-        
+
         return url
         
+    def command_function(self, arguments, sender, channel):
+        raise NotImplementedError
+
 class BaseVariable:
 
     def __init__(self, bot):
         self.name = type(self).__name__
         self.bot = bot
+
+    def variable_function(self):
+        raise NotImplementedError
