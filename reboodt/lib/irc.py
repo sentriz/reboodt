@@ -1,4 +1,4 @@
-# based on Alec Hussey's PyBotlib
+# Protocol() based on Alec Hussey's PyBotlib
 
 import socket
 import time
