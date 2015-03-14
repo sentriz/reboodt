@@ -8,6 +8,15 @@ class IRCString:
     def __init__(self, raw_string):
 
         self.raw_string = raw_string
+        
+        self.type = self._get_type()
+        self.parsed = self._parse()
+        
+        # sometimes we need to parse a command in 
+        # the format as a message
+        self.command_as_message = {}
+        if self.type == "user_command":
+            self.command_as_message = self._parse(parse_for="message")
 
     def _parse(self, parse_for=None):
 
@@ -94,11 +103,14 @@ class PluginManager:
 
         logging.info('loaded help from file "{0}"'.format(help_file_name))
 
-    def load(self):
+    def load(self, bot):
         """
         load all plugins in the "plugins" directory and add
         the command and variable functions in them to self.commands
         and self.variables
+        
+        an instance of the bot is an argument that gets passed
+        to the command and variable functions below
         """
 
         current_folder = os.path.dirname(__file__)
@@ -117,7 +129,7 @@ class PluginManager:
             plugin_file = imp.load_source(file, plugin_path)
 
             for class_ in plugin_file.classes:
-                plugin = class_(self)
+                plugin = class_(bot=bot)
                 if hasattr(plugin, "variable"):
                     self.variables[plugin.variable] = plugin
                 elif hasattr(plugin, "command"):
