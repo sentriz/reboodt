@@ -6,7 +6,6 @@ from lib.irc import Protocol
 from lib.parsing import IRCString
 from lib.parsing import PluginManager
 import logging
-import os
 import sys
 
 class Bot():
