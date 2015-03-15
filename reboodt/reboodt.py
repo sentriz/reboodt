@@ -1,5 +1,5 @@
 from lib.bot import Bot
-import config
+import lib.config as config
 import imp
 import logging
 import os
@@ -26,18 +26,23 @@ class UserBot(Bot):
 
         if command == ".join" and sender in config.admins:
             channels = arguments
-            if not arguments:
+            if not channels:
                 self.say("please provide at least one channel")
                 return
             for channel_ in channels:
+                if not channel_.startswith("#"):
+                    self.say('"{0}" doesn\'t start with "#"'.format(
+                        channel_))
+                    continue
                 self.protocol.join(channel_)
+                self.say("in channel " + channel_)
 
         elif command == ".quit" and sender in config.admins:
             reason = " ".join(arguments) or "disconnect"
             self.protocol.disconnect(reason)
             
         elif command == ".reload" and sender in config.admins:
-            self.plugins.load(bot=self)
+            self.plugins.load()
             self.plugins.load_help()
             self.say("plugins/help file reloaded")
 
@@ -58,27 +63,28 @@ if __name__ == "__main__":
         level=logging.INFO
     )
     
-    enabled_servers = [server["connect"] for server in config.servers]
+    enabled_servers = [server["connect"] for _, server \
+        in config.servers.items()]
     if not any(enabled_servers):
         logging.critical("no servers enabled to connect to in config.py")
         sys.exit(1)
 
-    for server in config.servers:
+    for name, server in config.servers.items():
 
         if not server["connect"]:
             continue
-
+            
         reboodt = UserBot(
             server = server["host"],
             port = server["port"],
-            channels = server["chans"],
+            channels = server["channels"],
             nick = server["nick"],
-            network_name = server["name"],
-            authentication = server["auth"]
+            network_name = name,
+            password = server["password"]
         )
 
         server_thread = threading.Thread(
-            None, target=reboodt.run, name=server["name"])
+            None, target=reboodt.run, name=name)
         server_thread.start()
     
     try:
