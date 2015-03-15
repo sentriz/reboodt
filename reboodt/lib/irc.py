@@ -43,7 +43,7 @@ class Protocol:
                 chunk = self.connection.recv(512).decode()
             except TimeoutError:
                 raise RuntimeError("connection timed out")
-            if not chunk:
+            if chunk == None:
                 raise RuntimeError("connection reset by peer")
             else:
                 data += chunk
