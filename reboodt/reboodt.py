@@ -24,24 +24,24 @@ class UserBot(Bot):
         arguments = self.string.parsed["arguments"]
         channel = self.string.parsed["channel"]
 
-        if command == ".join" and sender in config.admins:
+        if command == ".join" and sender in admins:
             channels = arguments
             if not channels:
                 self.say("please provide at least one channel")
                 return
             for channel_ in channels:
                 if not channel_.startswith("#"):
-                    self.say('"{0}" doesn\'t start with "#"'.format(
+                    self.say('"{0}" is not a #channel'.format(
                         channel_))
                     continue
                 self.protocol.join(channel_)
                 self.say("in channel " + channel_)
 
-        elif command == ".quit" and sender in config.admins:
+        elif command == ".quit" and sender in admins:
             reason = " ".join(arguments) or "disconnect"
             self.protocol.disconnect(reason)
             
-        elif command == ".reload" and sender in config.admins:
+        elif command == ".reload" and sender in admins:
             self.plugins.load()
             self.plugins.load_help()
             self.say("plugins/help file reloaded")
@@ -65,6 +65,7 @@ if __name__ == "__main__":
     
     config = load_yaml("config.yml")
     servers = config["servers"]
+    admins = config["admins"]
     
     enabled_servers = [server["connect"] for _, server in servers.items()]
     if not any(enabled_servers):
