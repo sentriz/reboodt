@@ -1,6 +1,5 @@
 from lib.bot import Bot
 from lib.utilities import load_yaml
-import imp
 import logging
 import os
 import sys
