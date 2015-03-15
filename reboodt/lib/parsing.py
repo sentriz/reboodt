@@ -75,10 +75,12 @@ class IRCString:
 
 class PluginManager:
 
-    def __init__(self):
+    def __init__(self, bot):
         self.commands = {}
         self.variables = {}
         self.help = {}
+        
+        self.bot = bot
 
     def load_help(self):
 
@@ -103,14 +105,14 @@ class PluginManager:
 
         logging.info('loaded help from file "{0}"'.format(help_file_name))
 
-    def load(self, bot):
+    def load(self):
         """
         load all plugins in the "plugins" directory and add
         the command and variable functions in them to self.commands
         and self.variables
         
-        an instance of the bot is an argument that gets passed
-        to the command and variable functions below
+        an instance of the bot self.bot gets passed
+        to the command and variable classes below
         """
 
         current_folder = os.path.dirname(__file__)
@@ -129,7 +131,7 @@ class PluginManager:
             plugin_file = imp.load_source(file, plugin_path)
 
             for class_ in plugin_file.classes:
-                plugin = class_(bot=bot)
+                plugin = class_(bot=self.bot)
                 if hasattr(plugin, "variable"):
                     self.variables[plugin.variable] = plugin
                 elif hasattr(plugin, "command"):
