@@ -9,7 +9,10 @@ class Protocol:
         self.connection = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
         )
-        self.connection.connect((server, port))
+        try:
+            self.connection.connect((server, port))
+        except socket.gaierror:
+            raise RuntimeError('unknown host "{0}"'.format(server))
 
     def send(self, message):
         """
