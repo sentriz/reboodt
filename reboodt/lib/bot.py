@@ -110,8 +110,8 @@ class Bot():
         for channel in self.channels:
             if not channel.startswith("#"):
                 continue
+            logging.info('joining channel "{0}"'.format(channel))
             self.protocol.join(channel)
-            logging.info('joined channel "{0}"'.format(channel))
 
     def _get_help(self, command):
 
