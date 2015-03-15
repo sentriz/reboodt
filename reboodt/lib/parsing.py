@@ -1,7 +1,7 @@
 import logging
 import os
 import imp
-import lib.config
+from lib.utilities import load_yaml
 
 class IRCString:
 
@@ -160,9 +160,12 @@ class PluginManager:
         return arguments_to_return
 
     def run(self, command, sender, arguments, channel):
+    
+        config = load_yaml("config.yml")
+        admins = config["admins"]
 
         plugin = self.commands[command]
-        if plugin.needs_admin and sender not in lib.config.admins:
+        if plugin.needs_admin and sender not in admins:
             sorry_string = '{0}: you need to be an admin to use the "{0}" plugin'
             return sorry_string.format(sender, plugin.name)
 
