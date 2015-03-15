@@ -87,17 +87,15 @@ class Bot():
                 )
             )
             if self.string.parsed["command"] in self.plugins.commands:
-                command_output = self.plugins.run(**self.string.parsed)
-                command_output_type = type(command_output).__name__
-                
-                if command_output_type == "str":
-                    self.say(command_output)
-                elif command_output_type in ("generator", "list"):
-                    for line in command_output:
-                        self.say(line)
+                output = self.plugins.run(**self.string.parsed)
+                if not output:
+                    return
+                output_type = type(output).__name__
+                if output_type == "str":
+                    self.say(output)
                 else:
-                    logging.error('plugin "{0}" returns an unknown object type "{1}"'.format(
-                            plugin.name, command_output_type))
+                    for line in output:
+                        self.say(line)
                 
             else:
                 logging.info('<< "{0}" is not a plugin command'.format(

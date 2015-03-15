@@ -8,11 +8,11 @@ class IRCString:
     def __init__(self, raw_string):
 
         self.raw_string = raw_string
-        
+
         self.type = self._get_type()
         self.parsed = self._parse()
-        
-        # sometimes we need to parse a command in 
+
+        # sometimes we need to parse a command in
         # the format as a message
         self.command_as_message = {}
         if self.type == "user_command":
@@ -79,7 +79,7 @@ class PluginManager:
         self.commands = {}
         self.variables = {}
         self.help = {}
-        
+
         self.bot = bot
 
     def load_help(self):
@@ -110,7 +110,7 @@ class PluginManager:
         load all plugins in the "plugins" directory and add
         the command and variable functions in them to self.commands
         and self.variables
-        
+
         an instance of the bot self.bot gets passed
         to the command and variable classes below
         """
@@ -160,7 +160,7 @@ class PluginManager:
         return arguments_to_return
 
     def run(self, command, sender, arguments, channel):
-    
+
         config = load_yaml("config.yml")
         admins = config["admins"]
 
@@ -171,10 +171,16 @@ class PluginManager:
 
         evaluated_arguments = self._evaluate_arguments(arguments)
         try:
-            command_output = plugin.command_function(
+            output = plugin.command_function(
                 evaluated_arguments, sender, channel)
         except Exception as exc:
             logging.exception(exc)
             return "error: {0}".format(str(exc).lower())
             
-        return command_output
+        output_type = type(output).__name__
+        if output_type not in ("str", "generator", "list"):
+            logging.error('plugin "{0}" returns an invalid object type "{1}"'.format(
+                plugin.name, output_type))
+            return
+            
+        return output
