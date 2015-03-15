@@ -20,8 +20,8 @@ class Bot():
         self.protocol.identify(nick)
         
         # initialise plugins
-        self.plugins = PluginManager()
-        self.plugins.load(bot=self)
+        self.plugins = PluginManager(bot=self)
+        self.plugins.load()
         self.plugins.load_help()
 
         # initialise class variables
