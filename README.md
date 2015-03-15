@@ -4,7 +4,7 @@ home: [sentriz.github.io/reboodt](http://sentriz.github.io/reboodt)
 
 Installation
 -----------
-modify `config.py` to your liking, then
+modify `config.yml` to your liking, then
 
     python reboodt.py
     
