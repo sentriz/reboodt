@@ -1,5 +1,5 @@
 from lib.bot import Bot
-import lib.config as config
+from lib.utilities import load_yaml
 import imp
 import logging
 import os
@@ -63,13 +63,15 @@ if __name__ == "__main__":
         level=logging.INFO
     )
     
-    enabled_servers = [server["connect"] for _, server \
-        in config.servers.items()]
+    config = load_yaml("config.yml")
+    servers = config["servers"]
+    
+    enabled_servers = [server["connect"] for _, server in servers.items()]
     if not any(enabled_servers):
-        logging.critical("no servers enabled to connect to in config.py")
+        logging.critical("no servers enabled to connect to in config.yml")
         sys.exit(1)
 
-    for name, server in config.servers.items():
+    for name, server in servers.items():
 
         if not server["connect"]:
             continue
