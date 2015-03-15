@@ -27,7 +27,7 @@ note: `[]` denotes optional arguments
     ".help [command]"   ... returns help for a command if provided. otherwise, list commands
     ".insult [user]"    ... returns a shakespearean insult, optionally aimed at a user
     ".join #channel"    ... joins a #channel
-    ".py expression"    ... evaluate a python expression, eg. "len([1, 2])" returns "2"
+    ".py expression"    ... evaluate a python expression (not locally), eg. "len([1, 2])" returns "2"
     ".qr string"        ... returns "http://goo.gl/xxxxxx", a qr code of your string
     ".quit [message]"   ... quit the current server with an optional message
     ".reload"           ... reload all plugins in the plugins directory
