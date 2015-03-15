@@ -1,7 +1,6 @@
 # Bot() based on Alec Hussey's PyBotlib
 # last_channel_message
 
-import config
 from lib.irc import Protocol
 from lib.parsing import IRCString
 from lib.parsing import PluginManager
@@ -11,7 +10,7 @@ import sys
 class Bot():
 
     def __init__(self, server, port, channels,
-            nick, network_name, authentication):
+            nick, network_name, password):
 
         logging.info('initialising "{0}" bot'.format(network_name))
 
@@ -30,7 +29,7 @@ class Bot():
         self.channels = channels
         self.nick = nick
         self.network_name = network_name
-        self.authentication = authentication
+        self.password = password
 
         # misc
         self.in_channels = False
@@ -52,16 +51,15 @@ class Bot():
                 self.in_channels = True
 
         elif self.string.type == "notice":
-            auth_or_not, password = self.authentication
 
-            if not auth_or_not:
+            if not self.password:
                 return
 
             # hook NickServ asking for authentication
             # "this nickname is registered".. "please choose"..
             if "choose a different" in self.raw_string:
-                self.protocol.privmsg("NickServ", "identify " + password)
-                hidden_password = "*"*len(password)
+                self.protocol.privmsg("NickServ", "identify " + self.password)
+                hidden_password = "*"*len(self.password)
                 logging.info("identifed with NickServ with pass " + hidden_password)
 
         elif self.string.type == "message":

@@ -1,7 +1,7 @@
 import logging
 import os
 import imp
-import config
+import lib.config
 
 class IRCString:
 
@@ -162,7 +162,7 @@ class PluginManager:
     def run(self, command, sender, arguments, channel):
 
         plugin = self.commands[command]
-        if plugin.needs_admin and sender not in config.admins:
+        if plugin.needs_admin and sender not in lib.config.admins:
             sorry_string = '{0}: you need to be an admin to use the "{0}" plugin'
             return sorry_string.format(sender, plugin.name)
 
