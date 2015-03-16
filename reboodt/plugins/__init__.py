@@ -1,5 +1,6 @@
-import urllib.request
+from lib.utilities import load_yaml
 import json
+import urllib.request
 
 class BaseCommand:
 
@@ -7,14 +8,26 @@ class BaseCommand:
         self.name = type(self).__name__
         self.bot = bot
         self.needs_admin = False
+        self.api_keys = load_yaml("api_keys.yml")
 
     def _shorten_url(self, url):
-        post_url = 'https://www.googleapis.com/urlshortener/v1/url'
+        post_url = 'https://www.googleapis.com/urlshortener/v1/url?'
+        
+        api_key = self.api_keys["googl_shortner"]
+
+        if api_key:
+            url_encoding = {
+                'key': api_key
+            } 
+            post_url += urllib.parse.urlencode(url_encoding)
+        
         post_data = {
             'longUrl': url
         }
+        
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0'
         }
 
         json_post_data = json.dumps(post_data)
@@ -32,7 +45,7 @@ class BaseCommand:
         url = json_data["id"]
 
         return url
-        
+
     def command_function(self, arguments, sender, channel):
         raise NotImplementedError
 
