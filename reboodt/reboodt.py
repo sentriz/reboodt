@@ -44,6 +44,9 @@ class UserBot(Bot):
             self.plugins.load()
             self.plugins.load_help()
             self.say("plugins/help file reloaded")
+            
+        elif command == ".ping":
+            self.say("pong!")
 
         elif command == ".help":
             if not arguments:
