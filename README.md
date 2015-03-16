@@ -4,9 +4,8 @@ home: [sentriz.github.io/reboodt](http://sentriz.github.io/reboodt)
 
 Installation
 -----------
-move `config.sample.yml` to `config.yml` and modify  
-move `api_keys.sample.yml` to `api_keys.yml` and (optionally) modify  
-then:
+move `config.sample.yml` to `config.yml` and modify.  
+move `api_keys.sample.yml` to `api_keys.yml` and (optionally) modify.  
 
     python reboodt.py
     
