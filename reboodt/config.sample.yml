@@ -1,0 +1,43 @@
+# do not use tabs to indent, use 4 spaces.
+# wrap channel names in quotes because a hash is a
+# - comment in yaml.
+# you can add as many servers as you want.
+# replace "no" value of password with a password
+# - that you may want reboodt to send to authenticate
+# - with NickServ (don't quote)
+
+admins:
+  - nick_one
+  - nick_two
+
+servers:
+
+    ExampleNet:
+        connect: no
+        nick: bot_nick
+        host: irc.example.net
+        port: 6667
+        channels:
+          - "#channel_one"
+          - "#channel_two"
+        password: no
+
+    ExampleNet:
+        connect: no
+        nick: bot_nick
+        host: irc.example.net
+        port: 6667
+        channels:
+          - "#channel_one"
+          - "#channel_two"
+        password: no
+
+    ExampleNet:
+        connect: no
+        nick: bot_nick
+        host: irc.example.net
+        port: 6667
+        channels:
+          - "#channel_one"
+          - "#channel_two"
+        password: no
