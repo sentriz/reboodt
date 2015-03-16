@@ -1,9 +1,6 @@
-# personal reebodt config
-config.my
-api_keys.my
-
-# temp
-bot_manager.txt
+# personal reboodt config
+config.yml
+api_keys.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -20,7 +17,6 @@ develop-eggs/
 dist/
 downloads/
 eggs/
-#lib
 lib64/
 parts/
 sdist/
