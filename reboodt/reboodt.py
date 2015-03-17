@@ -100,7 +100,6 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(5)
-
     except (SystemExit, KeyboardInterrupt):
         logging.warning("program was closed")
         sys.exit()
