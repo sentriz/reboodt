@@ -7,14 +7,14 @@ import threading
 import time
 
 class UserBot(Bot):
-        
+
     def _actions(self):
         """
         loop that listens and performs user defined commands
         """
 
         super()._actions()
-        
+
         if not self.string.type == "user_command":
             return
 
@@ -39,12 +39,12 @@ class UserBot(Bot):
         elif command == ".quit" and sender in admins:
             reason = " ".join(arguments) or "disconnect"
             self.protocol.disconnect(reason)
-            
+
         elif command == ".reload" and sender in admins:
             self.plugins.load()
             self.plugins.load_help()
             self.say("plugins/help file reloaded")
-            
+
         elif command == ".ping":
             self.say("pong!")
 
@@ -60,20 +60,20 @@ class UserBot(Bot):
 if __name__ == "__main__":
 
     logging.basicConfig(
-        format="[%(asctime)s] %(threadName)s: %(message)s", 
-        datefmt="%H:%M:%S", 
+        format="[%(asctime)s] %(threadName)s: %(message)s",
+        datefmt="%H:%M:%S",
         level=logging.INFO
     )
-    
+
     try:
         config = load_yaml("config.yml")
     except FileNotFoundError:
         logging.critical("could not find config.yml")
         sys.exit(1)
-        
+
     servers = config["servers"]
     admins = config["admins"]
-    
+
     enabled_servers = [server["connect"] for _, server in servers.items()]
     if not any(enabled_servers):
         logging.critical("no servers enabled to connect to in config.yml")
@@ -83,7 +83,7 @@ if __name__ == "__main__":
 
         if not server["connect"]:
             continue
-            
+
         reboodt = UserBot(
             server = server["host"],
             port = server["port"],
@@ -96,11 +96,11 @@ if __name__ == "__main__":
         server_thread = threading.Thread(
             None, target=reboodt.run, name=name)
         server_thread.start()
-    
+
     try:
         while True:
             time.sleep(5)
-            
+
     except (SystemExit, KeyboardInterrupt):
         logging.warning("program was closed")
         sys.exit()
