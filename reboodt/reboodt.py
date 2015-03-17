@@ -64,8 +64,12 @@ if __name__ == "__main__":
         datefmt="%H:%M:%S", 
         level=logging.INFO
     )
-    
-    config = load_yaml("config.yml")
+    try:
+        config = load_yaml("config.yml")
+    except FileNotFoundError:
+        logging.critical("could not find config.yml")
+        sys.exit(1)
+        
     servers = config["servers"]
     admins = config["admins"]
     
