@@ -46,5 +46,5 @@ Variables
 
 variable | returns..
 ---------|-------------
-`.last`  | the last message that was said
+`.last`  | the `last` message that was said
 `.time`  | "yyyy/mm/dd hh:mm:ss"
