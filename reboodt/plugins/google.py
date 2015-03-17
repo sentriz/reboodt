@@ -5,6 +5,11 @@ import json
 
 
 class Google(BaseCommand):
+    """
+    reboodt plugin that googles a search query
+    usage: .google query
+    """
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
