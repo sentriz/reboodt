@@ -4,9 +4,8 @@ import urllib.parse
 
 class User(BaseCommand):
     """
-    reboodt plugin taht displays information about a lastfm user
+    reboodt plugin that displays information about a lastfm user
     usage: .fmu user
-    result: ?
     """
 
     def __init__(self, *args, **kwargs):
