@@ -47,6 +47,9 @@ class User(BaseCommand):
 
         yield 'info for last.fm user "{0}":'.format(user_info["name"])
         
+        if "realname" in user_info and user_info["realname"]:
+            yield "real name: " + user_info["realname"]
+        
         for key in ("age", "gender", "country", "playcount"):
             if key in user_info and user_info[key]:
                 info_list.append("{0}: {1}".format(key, user_info[key]))
