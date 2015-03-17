@@ -26,6 +26,7 @@ Commands
 -----------
 note: `[]` denotes optional arguments
 
+    ".8 question"       ... ask a magic 8 ball a question
     ".calc 1 + 2"       ... returns "3"
     ".fmu user"         ... returns info on a last.fm user
     ".google query"     ... search google for a query
@@ -41,5 +42,5 @@ note: `[]` denotes optional arguments
 Variables
 -----------
 
-    ".last"           ... returns the last message that was said
-    ".time"           ... returns "yyyy/mm/dd hh:mm:ss"
+    ".last"             ... returns the last message that was said
+    ".time"             ... returns "yyyy/mm/dd hh:mm:ss"
