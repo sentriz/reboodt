@@ -14,12 +14,12 @@ move `api_keys.sample.yml` to `api_keys.yml` and (optionally) modify.
     
 Usage
 -----------
-- commands start with `.` followed by the command name - eg. `.calc`
-- after the command - a string, variable, or a combination of the two can be passed as arguments
-  - an example of this would be `.qr .last`, which would generate a QR code of that last message said in the channel
-- the arguments don't have to be just a string or just a variable either, they can be mixed up
-  - eg. `.say the current time is .time on the server` which would do exactly what you think
-- to create a command/variable - make a copy of `files/template.txt` for dir `plugins/`, rename to `plugin.py`, and modify
+- commands start with `.` followed by the command name - eg. `.calc` ..
+- after the command - a string or variable can be passed as an argument ..
+  - an example of this would be `.qr .last`, which would generate a QR code of the last message said in the channel ..
+- the arguments don't have to be just a string or just a variable either, they can be mixed up ..
+  - eg. `.say the current time is .time on the server` ..
+- to create a command/variable - make a copy of `files/template.txt` for dir `plugins/`, rename to `your_plugin.py`, and modify ..
 
 
 Commands
