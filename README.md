@@ -44,5 +44,7 @@ command     | argument(s)    | returns..
 Variables
 -----------
 
-    ".last"             ... returns the last message that was said
-    ".time"             ... returns "yyyy/mm/dd hh:mm:ss"
+variable | returns..
+---------|-------------
+`.last`  | the last message that was said
+`.time`  | "yyyy/mm/dd hh:mm:ss"
