@@ -64,6 +64,7 @@ if __name__ == "__main__":
         datefmt="%H:%M:%S", 
         level=logging.INFO
     )
+    
     try:
         config = load_yaml("config.yml")
     except FileNotFoundError:
