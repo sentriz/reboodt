@@ -13,7 +13,7 @@ class EightBall(BaseCommand):
         super().__init__(*args, **kwargs)
 
         self.command = ".8"
-        self.replies = {}
+        self.replies = []
 
         self._load_replies()
 
@@ -33,7 +33,7 @@ class EightBall(BaseCommand):
     def command_function(self, arguments, sender, channel):
         question = " ".join(arguments)
         if not question:
-            return "Cannot predict now. Try providing a question."
+            return "Cannot predict now - Try providing a question"
             
         reply = random.choice(self.replies)
         
