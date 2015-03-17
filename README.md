@@ -26,18 +26,20 @@ Commands
 -----------
 note: `[]` denotes optional arguments
 
-    ".8 question"       ... ask a magic 8 ball a question
-    ".calc 1 + 2"       ... returns "3"
-    ".fmu user"         ... returns info on a last.fm user
-    ".google query"     ... search google for a query
-    ".help [command]"   ... returns help for a command if provided. otherwise, list commands
-    ".insult [user]"    ... returns a shakespearean insult, optionally aimed at a user
-    ".join #channel"    ... joins a #channel
-    ".py expression"    ... evaluate a python expression (not locally), eg. "len([1, 2])" returns "2"
-    ".qr string"        ... returns "http://goo.gl/xxxxxx", a qr code of your string
-    ".quit [message]"   ... quit the current server with an optional message
-    ".reload"           ... reload all plugins in the plugins directory
-    ".say string"       ... returns "string", useful if string has a .variable
+command   | argument(s)  | returns..
+----------|--------------|----------
+.8        | question     | a magic 8 ball reply
+.calc     | expression   | a solution (eg `.calc 1 + 2` returns `3`)
+.fmu      | user         | info on a [last.fm](http://last.fm/) user
+.google   | query        | top 4 Google results when searching for `query`
+.help     | [command]    | help for a command if provided. otherwise, a list commands
+.insult   | [user]       | a shakespearean insult, optionally aimed at a user
+.join     | #channel     | 
+.py       | expression   | a python `expression` evaluated (eg. `len([1, 2])` returns `2`)
+.qr       | string       | a qr code of your string
+.quit     | [message]    | 
+.reload   |              | 
+.say      | string       | `string`, useful if `string` has a `.variable`
 
 Variables
 -----------
