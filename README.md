@@ -38,7 +38,7 @@ command     | argument(s)    | returns..
 `.py`       | `expression`   | a python `expression` evaluated (eg. `len([1, 2])` returns `2`)
 `.qr`       | `string`       | a qr code of your `string`
 `.quit`     | `[message]`    | 
-`.reload`   |                | nothing; command `reload`s all plugins in the `plugin/` directory
+`.reload`   |                | nothing; command reloads all plugins in the `plugin/` directory
 `.say`      | `string`       | `string`, useful if `string` has a `.variable`
 
 Variables
