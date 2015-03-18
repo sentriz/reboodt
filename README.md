@@ -33,18 +33,18 @@ note: `[]` denotes optional arguments
 
 command..   | takes argument(s)..  | and returns..
 ------------|----------------------|--------------
-*.8*        | `question`           | a positive, negative, or neutral [magic 8 ball](http://en.wikipedia.org/wiki/Magic_8-Ball) reply
-*.calc*     | `expression`         | an evaluation of a mathematical `expression` (eg `.calc 1 + 2` returns `3`)
-*.fmu*      | `user`               | info on a [last.fm](http://last.fm/) user
-*.google*   | `query`              | top 4 Google results when searching for a `query`
-*.help*     | `[command]`          | help for a `command` if provided. otherwise, a list commands
-*.insult*   | `[user]`             | a shakespearean insult, optionally aimed at a `user`
-*.join*     | `#channel`           | 
-*.py*       | `expression`         | a python `expression` evaluated (eg. `.py len([1, 2])` returns `2`)
-*.qr*       | `string`             | a qr code of your `string`
-*.quit*     | `[message]`          | 
-*.reload*   |                      | nothing; command reloads all plugins in the `plugin/` directory
-*.say*      | `string`             | `string`, useful if `string` has a `.variable`
+**.8**        | `question`           | a positive, negative, or neutral [magic 8 ball](http://en.wikipedia.org/wiki/Magic_8-Ball) reply
+**.calc**     | `expression`         | an evaluation of a mathematical `expression` (eg `.calc 1 + 2` returns `3`)
+**.fmu**      | `user`               | info on a [last.fm](http://last.fm/) user
+**.google**   | `query`              | top 4 Google results when searching for a `query`
+**.help**     | `[command]`          | help for a `command` if provided. otherwise, a list commands
+**.insult**   | `[user]`             | a shakespearean insult, optionally aimed at a `user`
+**.join**     | `#channel`           | 
+**.py**       | `expression`         | a python `expression` evaluated (eg. `.py len([1, 2])` returns `2`)
+**.qr**       | `string`             | a qr code of your `string`
+**.quit**     | `[message]`          | 
+**.reload**   |                      | nothing; command reloads all plugins in the `plugin/` directory
+**.say**      | `string`             | `string`, useful if `string` has a `.variable`
 
 Variables
 -----------
