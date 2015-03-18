@@ -43,8 +43,7 @@ class Insult(BaseCommand):
         second_word = random.choice(self.insults["second"])
         third_word = random.choice(self.insults["third"])
 
-        insult = "{0} {1} {2}".format(
-            first_word, second_word, third_word)
+        insult = " ".join(first_word, second_word, third_word)
 
         prefix = user + ", " if user else ""
         return prefix + "thou " + insult + "!"
