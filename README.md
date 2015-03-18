@@ -26,9 +26,9 @@ Usage
   - rename to `your_plugin.py` ..
   - modify ..
 
-
 Commands
 -----------
+
 note: `[]` denotes optional arguments
 
 command..   | takes argument(s).. | and returns..
