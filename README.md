@@ -18,8 +18,8 @@ Usage
 - commands start with `.` followed by the command name - eg. `.calc` ..
 - after the command - a string or variable can be passed as an argument ..
   - an example of this would be `.qr .last`, which would generate a QR code of the last message said in the channel ..
-- the arguments don't have to be just a string or just a variable either, they can be mixed up ..
-  - eg. `.say the current time is .time on the server` ..
+  - the arguments don't have to be just a string or just a variable either, they can be mixed up ..
+    - eg. `.say the current time is .time on the server` ..
 - to create a command/variable - make a copy of `files/template.txt` for dir `plugins/`, rename to `your_plugin.py`, and modify ..
 
 
@@ -47,5 +47,5 @@ Variables
 
 variable | is replaced with..
 ---------|-------------
-`.last`  | the `last` message that was said
+`.last`  | the `last` message that was said in the channel
 `.time`  | "yyyy/mm/dd hh:mm:ss"
