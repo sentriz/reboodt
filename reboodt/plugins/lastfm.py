@@ -106,7 +106,11 @@ class UserNP(BaseCommand):
         yield main_line
         
         if "album" in last_track:
-            yield 'from the album "{0}"'.format(last_track["album"]["#text"]) 
+            yield 'from the album "{0}"'.format(last_track["album"]["#text"])
+            
+        if "url" in last_track:
+            url = last_track["url"]
+            yield "track page: " + self._shorten_url(url)
 
     def command_function(self, arguments, sender, channel):
         user = arguments[0] if arguments else None
