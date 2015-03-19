@@ -69,8 +69,63 @@ class UserInfo(BaseCommand):
             user_info = user_data["user"]
             info_strings = self._generate_info(user_info)
             return info_strings
+            
+class UserNP(BaseCommand):
+    """
+    reboodt plugin that tries to find now playing info on a given user
+    usage: .fmnp user
+    """
 
-classes = (UserInfo,)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.command = ".fmnp"
+       
+    def _generate_info(self, tracks_data):
+        recent_tracks = tracks_data["recenttracks"]
+        last_track = recent_tracks["track"][0]
+        formatted_user = recent_tracks["@attr"]["user"]
+        now_playing = False
+        
+        if "@attr" in last_track:
+            if "nowplaying" in last_track["@attr"]:
+                if last_track["@attr"]["nowplaying"]:
+                    now_playing = True
+                    
+        if now_playing:
+            yield 'user "{0}" is now playing:'.format(
+                formatted_user)
+        else:
+            yield 'user "{0}" is not playing anything right now.'.format(
+                formatted_user) + " last track was:"
+        
+        main_line = '"' + last_track["name"] + '"'
+        if "artist" in last_track:
+            main_line += " by " + last_track["artist"]["#text"]
+            
+        yield main_line
+        
+        if "album" in last_track:
+            yield 'from the album "{0}"'.format(last_track["album"]["#text"]) 
+
+    def command_function(self, arguments, sender, channel):
+        user = arguments[0] if arguments else None
+        if not user:
+            return "please provide a user"
+
+        tracks_data = get_lastfm_data(
+            self.api_keys["lastfm"],
+            "user.getrecenttracks",
+            user = urllib.parse.quote(user)
+        )
+        
+        if not "recenttracks" in tracks_data:
+            return '"{0}" is not a last.fm user'.format(user)
+        else:
+            info_strings = self._generate_info(tracks_data)
+            return info_strings
+
+classes = (UserInfo, UserNP)
 
 if __name__ == "__main__":
     for class_ in classes:
