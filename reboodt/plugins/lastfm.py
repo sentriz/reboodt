@@ -19,8 +19,7 @@ def get_lastfm_data(api_key, api_method, **kwargs):
     
     return response_json
 
-
-class User(BaseCommand):
+class UserInfo(BaseCommand):
     """
     reboodt plugin that displays information about a lastfm user
     usage: .fmu user
@@ -71,7 +70,7 @@ class User(BaseCommand):
             info_strings = self._generate_info(user_info)
             return info_strings
 
-classes = (User,)
+classes = (UserInfo,)
 
 if __name__ == "__main__":
     for class_ in classes:
