@@ -2,6 +2,24 @@ from plugins.__init__ import BaseCommand
 import json
 import urllib.parse
 
+def get_lastfm_data(api_key, api_method, **kwargs):
+
+    base_url = "http://ws.audioscrobbler.com/2.0/?"
+    lastfm_api_args = {
+        "api_key": api_key,
+        "format": "json",
+        "method": api_method
+    }
+    
+    all_api_args = dict(lastfm_api_args.items() | kwargs.items())
+    url = base_url + urllib.parse.urlencode(all_api_args)
+
+    response = urllib.request.urlopen(url).read()
+    response_json = json.loads(response.decode())
+    
+    return response_json
+
+
 class User(BaseCommand):
     """
     reboodt plugin that displays information about a lastfm user
@@ -12,37 +30,8 @@ class User(BaseCommand):
         super().__init__(*args, **kwargs)
 
         self.command = ".fmu"
-
-    def _get_data(self, user):
-        quoted_user = urllib.parse.quote(user)
-
-        base_url = "http://ws.audioscrobbler.com/2.0/?"
-        lastfm_api_args = {
-            "api_key": self.api_keys["lastfm"],
-            "format": "json",
-            "method": "user.getinfo",
-            "user": quoted_user
-        }
-
-        url = base_url + urllib.parse.urlencode(lastfm_api_args)
-
-        response = urllib.request.urlopen(url).read()
-        response_json = json.loads(response.decode())
-        return response_json
-
-    def command_function(self, arguments, sender, channel):
-        user = arguments[0] if arguments else None
-        if not user:
-            yield "please provide a user"
-            return
-        
-        user_data = self._get_data(user)
-        if not "user" in user_data:
-            yield '"{0}" is not a last.fm user'.format(user)
-            return
-        else:
-            user_info = user_data["user"]
-            
+       
+    def _generate_info(self, user_info):
         info_list, image_url = [], ""
 
         yield 'info for last.fm user "{0}":'.format(user_info["name"])
@@ -63,6 +52,24 @@ class User(BaseCommand):
             yield "image: " + self._shorten_url(image_url)
             
         yield "url: " + user_info["url"]
+
+    def command_function(self, arguments, sender, channel):
+        user = arguments[0] if arguments else None
+        if not user:
+            return "please provide a user"
+
+        user_data = get_lastfm_data(
+            self.api_keys["lastfm"],
+            "user.getinfo",
+            user = urllib.parse.quote(user)
+        )
+        
+        if not "user" in user_data:
+            return '"{0}" is not a last.fm user'.format(user)
+        else:
+            user_info = user_data["user"]
+            info_strings = self._generate_info(user_info)
+            return info_strings
 
 classes = (User,)
 
