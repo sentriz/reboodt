@@ -5,4 +5,4 @@
     - --port
     - --channels
     - --nick
-- refactor 
+	- --debug
