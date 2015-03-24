@@ -15,81 +15,90 @@ move <code>api_keys.sample.yml</code> to <code>api_keys.yml</code> and (optional
 </code></pre>
 <h2>Usage</h2>
 <ul>
-<li>commands start with <code>.</code> followed by the command name - eg. <code>.calc</code> ..</li>
+<li>commands start with <code>.</code> followed by the command name ..</li>
+<li>eg. <code>.calc</code> ..</li>
 <li>after the command - a string or variable can be passed as an argument ..</li>
-<li>an example of this would be <code>.qr .last</code>, which would generate a QR code of the last message said in the channel ..</li>
+<li>eg. <code>.qr .last</code>, which would generate a <a href="http://en.wikipedia.org/wiki/QR_code">QR code</a> of the last message said in the channel ..</li>
 <li>the arguments don't have to be just a string or just a variable either, they can be mixed up ..</li>
 <li>eg. <code>.say the current time is .time on the server</code> ..</li>
-<li>to create a command/variable - make a copy of <code>files/template.txt</code> for dir <code>plugins/</code>, rename to <code>your_plugin.py</code>, and modify ..</li>
+<li>to create a command/variable ..</li>
+<li>make a copy of <code>files/template.txt</code> for dir <code>plugins/</code> ..</li>
+<li>rename to <code>your_plugin.py</code> ..</li>
+<li>modify ..</li>
 </ul>
 <h2>Commands</h2>
 <p>note: <code>[]</code> denotes optional arguments</p>
 <table>
 <thead>
 <tr>
-<th>command</th>
-<th>argument(s)</th>
-<th>returns..</th>
+<th>command..</th>
+<th>takes argument(s)..</th>
+<th>and returns..</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>.8</code></td>
+<td><strong>.8</strong></td>
 <td><code>question</code></td>
 <td>a positive, negative, or neutral <a href="http://en.wikipedia.org/wiki/Magic_8-Ball">magic 8 ball</a> reply</td>
 </tr>
 <tr>
-<td><code>.calc</code></td>
+<td><strong>.calc</strong></td>
 <td><code>expression</code></td>
-<td>an evaluation (eg <code>.calc 1 + 2</code> returns <code>3</code>)</td>
+<td>an evaluation of a mathematical <code>expression</code> (eg <code>.calc 1 + 2</code> returns <code>3</code>)</td>
 </tr>
 <tr>
-<td><code>.fmu</code></td>
+<td><strong>.fmnp</strong></td>
 <td><code>user</code></td>
-<td>info on a <a href="http://last.fm/">last.fm</a> user</td>
+<td>what a <a href="http://last.fm/">last.fm</a> <code>user</code> is, or was, listening to</td>
 </tr>
 <tr>
-<td><code>.google</code></td>
+<td><strong>.fmu</strong></td>
+<td><code>user</code></td>
+<td>info on a <a href="http://last.fm/">last.fm</a> <code>user</code></td>
+</tr>
+<tr>
+<td><strong>.google</strong></td>
 <td><code>query</code></td>
 <td>top 4 Google results when searching for a <code>query</code></td>
 </tr>
 <tr>
-<td><code>.help</code></td>
+<td><strong>.help</strong></td>
 <td><code>[command]</code></td>
 <td>help for a <code>command</code> if provided. otherwise, a list commands</td>
 </tr>
 <tr>
-<td><code>.insult</code></td>
+<td><strong>.insult</strong></td>
 <td><code>[user]</code></td>
 <td>a shakespearean insult, optionally aimed at a <code>user</code></td>
 </tr>
 <tr>
-<td><code>.join</code></td>
+<td><strong>.join</strong></td>
 <td><code>#channel</code></td>
 <td></td>
 </tr>
 <tr>
-<td><code>.py</code></td>
+<td><strong>.py</strong></td>
 <td><code>expression</code></td>
-<td>a python <code>expression</code> evaluated (eg. <code>len([1, 2])</code> returns <code>2</code>)</td>
+<td>a python <code>expression</code> evaluated (eg. <code>.py len([1, 2])</code> returns <code>2</code>)</td>
 </tr>
 <tr>
-<td><code>.qr</code></td>
+<td><strong>.qr</strong></td>
 <td><code>string</code></td>
 <td>a qr code of your <code>string</code></td>
 </tr>
 <tr>
-<td><code>.quit</code></td>
+<td><strong>.quit</strong></td>
 <td><code>[message]</code></td>
 <td></td>
 </tr>
 <tr>
-<td><code>.reload</code></td>
+<td><strong>.reload</strong></td>
 <td></td>
 <td>nothing; command reloads all plugins in the <code>plugin/</code> directory</td>
 </tr>
 <tr>
-<td><code>.say</code></td>
+<td><strong>.say</strong></td>
 <td><code>string</code></td>
 <td><code>string</code>, useful if <code>string</code> has a <code>.variable</code></td>
 </tr>
@@ -105,13 +114,13 @@ move <code>api_keys.sample.yml</code> to <code>api_keys.yml</code> and (optional
 </thead>
 <tbody>
 <tr>
-<td><code>.last</code></td>
-<td>the <code>last</code> message that was said</td>
+<td><strong>.last</strong></td>
+<td>the <code>last</code> message that was said in the channel</td>
 </tr>
 <tr>
-<td><code>.time</code></td>
+<td><strong>.time</strong></td>
 <td>"yyyy/mm/dd hh:mm:ss"</td>
 </tr>
 </tbody>
 </table>
-<p style="color: #ffffff; background-color: #000000; text-align: right; font-size: 85%">last updated: 2015/03/17 21:31:45</p>
+<p style="color: #ffffff; background-color: #000000; text-align: right; font-size: 85%">last updated: 2015/03/24 21:08:41</p>
