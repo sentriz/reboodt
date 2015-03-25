@@ -35,6 +35,7 @@ command..   | takes argument(s).. | and returns..
 ------------|---------------------|--------------
 **.8**      | `question`          | a positive, negative, or neutral [magic 8 ball](http://en.wikipedia.org/wiki/Magic_8-Ball) reply
 **.calc**   | `expression`        | an evaluation of a mathematical `expression` (eg `.calc 1 + 2` returns `3`)
+**.define** | `word`              | a definition of a `word`
 **.fmnp**   | `user`              | what a [last.fm](http://last.fm/) `user` is, or was, listening to 
 **.fmu**    | `user`              | info on a [last.fm](http://last.fm/) `user`
 **.google** | `query`             | top 4 Google results when searching for a `query`
