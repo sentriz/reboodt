@@ -3,6 +3,7 @@
 .calc 1 + 2: returns "3", using Wolfram|Alpha API - it accepts almost anything
 .fmu user: returns info on a last.fm user
 .fmnp user: returns last.fm now playing info on a user
+.define word: defines a word 
 .google query: searches Google for a query
 .help [command]: returns help for a command if provided. otherwise, lists commands
 .insult [user]: returns a Shakespearean insult, optionally aimed at a user
