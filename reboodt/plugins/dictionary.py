@@ -1,8 +1,5 @@
 from plugins.__init__ import BaseCommand
-import urllib.parse
-import urllib.request
-import xmltodict
-import collections
+from lib.merriam_webster_api import CollegiateDictionary, WordNotFoundException
 
 class MerriamWebster(BaseCommand):
     """
@@ -11,49 +8,35 @@ class MerriamWebster(BaseCommand):
     """
 
     command = ".define"
-    
-    def _get_definitions(self, word):
-        base_url = "http://www.dictionaryapi.com/api/v1/references/collegiate/xml/{word}?"
-        quoted_word = urllib.parse.quote(word)
-        base_url = base_url.format(word=word)
-        url_encoding = {
-            "key": self.api_keys["merriam_webster"]
-        }
-        url = base_url + urllib.parse.urlencode(url_encoding)
-        response = urllib.request.urlopen(url).read()
-        xml = xmltodict.parse(response)
-        
-        word = xml["entry_list"]["entry"]["ew"]
-        pronunciation = xml["entry_list"]["entry"]["hw"]
-        definitions = xml["entry_list"]["entry"]["def"]["dt"]
-        definition_list = []
-        
-        for definition in definitions:
-            if isinstance(definition, collections.OrderedDict):
-                def_word_list = definition["#text"].split(" ")
-                removals_list = []
-                for key, value in definition.items():
-                    if key != "#text":
-                        removals_list.append(value)
-                for n, word in enumerate(def_word_list):
-                    if not word:
-                        del def_word_list[n]
-                        def_word_list.insert(n, removals_list.pop())
-                definition_list.append(" ".join(def_word_list))
-            else:
-                definition_list.append(definition)
-        for definition in definition_list:
-            type = definition[1]
-            definition = " ".join(definition.split()[1:])
-            yield "[{0}] {1}".format(type, definition)
+
+    def _lookup(self, query):
+        api_key = self.api_keys["merriam_webster_collegiate"]
+        dictionary = CollegiateDictionary(api_key)
+        definitions = []
+        try:
+            for entry in dictionary.lookup(query):
+                for definition, examples in entry.senses:
+                    if len(definitions) > 4:
+                        break
+                    to_append = (entry.word, entry.function, definition)
+                    definitions.append(to_append)
+        except WordNotFoundException:
+            yield 'no definitions found for "{0}"'.format(query)
+            return
+        for word, function, definition in definitions:
+            yield "[{0}|{1}] {2}".format(word, function, definition)
 
     def command_function(self, arguments, sender, channel):
-        word = arguments[0] if arguments else None
-        if not word:
-            return "please provide a word"
-        if not "merriam_webster" in self.api_keys:
-            return "please get a Merriam Webster API key"
-        return self._get_definitions(word)
+        query = " ".join(arguments)
+        if not query:
+            return "please provide a word to define"
+        if not "merriam_webster_collegiate" in self.api_keys:
+            api_register_url = "http://www.dictionaryapi.com/register/index.htm"
+            string = "please get a Merriam Webster Collegiate API key"
+            string += " " + self._shorten_url(api_register_url)
+            return string
+        definitions = self._lookup(query)
+        return definitions
 
 classes = (MerriamWebster,)
 
