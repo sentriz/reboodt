@@ -6,11 +6,8 @@ class Say(BaseCommand):
     usage: .say this is a string
     result: this is a string
     """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         
-        self.command = ".say"
+    command = ".say"
  
     def command_function(self, arguments, sender, channel):
         string = " ".join(arguments)

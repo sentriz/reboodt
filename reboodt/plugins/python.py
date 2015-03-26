@@ -7,11 +7,8 @@ class Python(BaseCommand):
     usage: .py 1 + 2
     result: 3
     """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         
-        self.command = ".py"
+    command = ".py"
         
     def _evaluate(self, string):
         base_url = "http://tumbolia.appspot.com/py/"
