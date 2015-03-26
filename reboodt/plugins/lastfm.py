@@ -94,12 +94,12 @@ class UserNP(BaseCommand):
                 formatted_user) + " last track was:"
 
         main_line = '"' + last_track["name"] + '"'
-        if "artist" in last_track:
+        if "artist" in last_track and last_track["artist"]:
             main_line += " by " + last_track["artist"]["#text"]
 
         yield main_line
 
-        if "album" in last_track:
+        if "album" in last_track and last_track["album"]:
             yield 'from the album "{0}"'.format(last_track["album"]["#text"])
 
         if "url" in last_track:
