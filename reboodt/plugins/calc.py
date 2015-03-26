@@ -24,6 +24,8 @@ class WolframAlpha(BaseCommand):
         return unescaped_response
         
     def command_function(self, arguments, sender, channel):
+        if not arguments:
+            return "please provide a query to calculate"
         string = " ".join(arguments)
         string = string.replace("+", "plus")
         results = self._calculate(string).split(";")
