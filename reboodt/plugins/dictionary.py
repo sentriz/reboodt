@@ -14,7 +14,7 @@ class MerriamWebster(BaseCommand):
     def command_function(self, arguments, sender, channel):
         pass
 
-classes = (Dict,)
+classes = (MerriamWebster,)
 
 if __name__ == "__main__":
     for class_ in classes:
