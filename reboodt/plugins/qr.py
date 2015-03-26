@@ -11,7 +11,6 @@ class QR(BaseCommand):
     command = ".qr"
         
     def _string_to_qr(self, string):            
-        # https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example
         qr_api_url = "https://api.qrserver.com/v1/create-qr-code/?"
         qr_api_args = {
             "size": "150x150",
