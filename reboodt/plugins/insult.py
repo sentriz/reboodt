@@ -16,8 +16,8 @@ class Insult(BaseCommand):
         super().__init__(*args, **kwargs)
 
         self.command = ".insult"
+        
         self.insults = {}
-
         self._load_insults()
 
     def _load_insults(self):
