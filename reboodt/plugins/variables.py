@@ -8,10 +8,7 @@ class Time(BaseVariable):
     returns: yyyy/mm/dd hh:mm:ss
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.variable = ".time"
+    variable = ".time"
 
     def variable_function(self):
         time_format = "%Y/%m/%d %H:%M:%S"
@@ -26,10 +23,7 @@ class Last(BaseVariable):
     returns: this message if someone said this message if som..
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.variable = ".last"
+    variable = ".last"
 
     def variable_function(self):
         last_message = self.bot.last_message

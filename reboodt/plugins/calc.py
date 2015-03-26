@@ -2,17 +2,14 @@ from plugins.__init__ import BaseCommand
 import urllib.parse
 import html
 
-class Calc(BaseCommand):
+class WolframAlpha(BaseCommand):
     """
-    reboodt plugin using the wolfram alpha calculator
+    reboodt plugin using the Wolfram|Alpha calculator
     usage: .c 5 + 2
     result: 7
     """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        self.command = ".calc"
+    
+    command = ".calc"
         
     def _calculate(self, string):
         base_url = "http://tumbolia.appspot.com/wa/"
@@ -38,7 +35,7 @@ class Calc(BaseCommand):
         else:
             return "no results found"
         
-classes = (Calc,)
+classes = (WolframAlpha,)
         
 if __name__ == "__main__":
     for class_ in classes:

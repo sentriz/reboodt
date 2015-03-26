@@ -25,10 +25,7 @@ class UserInfo(BaseCommand):
     usage: .fmu user
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.command = ".fmu"
+    command = ".fmu"
 
     def _generate_info(self, user_info):
         info_list, image_url = [], ""
@@ -76,10 +73,7 @@ class UserNP(BaseCommand):
     usage: .fmnp user
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.command = ".fmnp"
+    command = ".fmnp"
 
     def _generate_info(self, tracks_data):
         recent_tracks = tracks_data["recenttracks"]
