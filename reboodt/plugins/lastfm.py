@@ -99,7 +99,7 @@ class UserNP(BaseCommand):
 
         yield main_line
 
-        if "album" in last_track and last_track["album"]:
+        if "album" in last_track and last_track["album"]["#text"]:
             yield 'from the album "{0}"'.format(last_track["album"]["#text"])
 
         if "url" in last_track:
