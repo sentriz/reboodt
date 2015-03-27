@@ -20,8 +20,18 @@ class MerriamWebster(BaseCommand):
                         break
                     to_append = (entry.word, entry.function, definition)
                     definitions.append(to_append)
-        except WordNotFoundException:
-            yield 'no definitions found for "{0}"'.format(query)
+        except WordNotFoundException as exc:
+            return_string = 'no definitions found for "{0}". '.format(query)
+            if exc.suggestions:
+                short_suggestions = exc.suggestions[:5]
+                return_string += "did you mean "
+                if len(short_suggestions) == 1:
+                    return_string += '"' + short_suggestions[0] + '"'
+                else:
+                    return_string += '"' + '", "'.join(short_suggestions[:-1]) 
+                    return_string += '"' + ' or "' + short_suggestions[-1] + '"'
+                return_string += "?"
+            yield return_string
             return
         for word, function, definition in definitions:
             yield "[{0}|{1}] {2}".format(word, function, definition)
