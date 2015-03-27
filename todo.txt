@@ -1,8 +1,8 @@
 - add a CLI
   - options
-    - --no-config
+    - --use-config
     - --server
     - --port
     - --channels
     - --nick
-	- --debug
+    - --debug
