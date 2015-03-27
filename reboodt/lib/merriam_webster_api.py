@@ -1,5 +1,14 @@
 # -*- encoding: utf-8 -*-
 
+# https://github.com/pfeyz/merriam-webster-api
+# https://github.com/pfeyz/merriam-webster-api
+# https://github.com/pfeyz/merriam-webster-api
+# https://github.com/pfeyz/merriam-webster-api
+# https://github.com/pfeyz/merriam-webster-api
+# https://github.com/pfeyz/merriam-webster-api
+# https://github.com/pfeyz/merriam-webster-api
+# https://github.com/pfeyz/merriam-webster-api
+
 import re
 import xml.etree.cElementTree as ElementTree
 
