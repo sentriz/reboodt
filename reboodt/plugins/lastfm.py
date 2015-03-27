@@ -120,7 +120,7 @@ class UserNP(BaseCommand):
         if not "recenttracks" in tracks_data:
             return '"{0}" is not a last.fm user'.format(user)
         elif "track" not in tracks_data["recenttracks"]:   
-            return '"{0}" has never played anything'.format(user)
+            return 'last.fm user "{0}" has never played anything'.format(user)
         else:
             info_strings = self._generate_info(tracks_data)
             return info_strings
