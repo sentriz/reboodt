@@ -94,45 +94,47 @@ if __name__ == "__main__":
         datefmt="%H:%M:%S",
         level=logging.INFO
     )
-    
     args = docopt(__doc__, version="reboodt v1.5")
-    print(args)
-    print()
-    print(sys.argv)
-    sys.exit()
-
-    try:
-        config = load_yaml("config.yml")
-    except FileNotFoundError:
-        logging.critical("could not find config.yml")
-        sys.exit(1)
-
-    servers = config["servers"]
-    admins = config["admins"]
-
-    enabled_servers = [server["connect"] for _, server in servers.items()]
-    if not any(enabled_servers):
-        logging.critical("no servers enabled to connect to in config.yml")
-        sys.exit(1)
-
-    for name, server in servers.items():
-
-        if not server["connect"]:
-            continue
-
+    if args["<host>"] and args["<nick>"]:
         reboodt = UserBot(
-            server = server["host"],
-            port = server["port"],
-            channels = server["channels"],
-            nick = server["nick"],
-            network_name = name,
-            password = server["password"]
-        )
-
+            server = args["<host>"]
+            port = args["<port>"] or 6667,
+            channels = args["--channels"].replace(" ", "").split(","),
+            nick = args["<nick>"],
+            network_name = args["<host>"],
+            password = args["--password"],
+            admins = args["--admins"].replace(" ", "").split(",")
         server_thread = threading.Thread(
             None, target=reboodt.run, name=name)
         server_thread.start()
-
+        )
+    else:
+        try:
+            config = load_yaml("config.yml")
+        except FileNotFoundError:
+            logging.critical("could not find config.yml")
+            sys.exit(1)
+        servers = config["servers"]
+        admins = config["admins"]
+        enabled_servers = [server["connect"] for _, server in servers.items()]
+        if not any(enabled_servers):
+            logging.critical("no servers enabled to connect to in config.yml")
+            sys.exit(1)
+        for name, server in servers.items():
+            if not server["connect"]:
+                continue
+            reboodt = UserBot(
+                server = server["host"],
+                port = server["port"],
+                channels = server["channels"],
+                nick = server["nick"],
+                network_name = name,
+                password = server["password"]
+                admins = config["admins"]
+            )
+            server_thread = threading.Thread(
+                None, target=reboodt.run, name=name)
+            server_thread.start()
     try:
         while True:
             time.sleep(5)
