@@ -2,6 +2,7 @@ from lib.utilities import load_yaml
 import json
 import urllib.request
 
+
 class BaseCommand:
 
     def __init__(self, bot):
@@ -12,19 +13,19 @@ class BaseCommand:
 
     def _shorten_url(self, url):
         post_url = 'https://www.googleapis.com/urlshortener/v1/url?'
-        
+
         api_key = self.api_keys["googl_shortner"]
 
         if api_key:
             url_encoding = {
                 'key': api_key
-            } 
+            }
             post_url += urllib.parse.urlencode(url_encoding)
-        
+
         post_data = {
             'longUrl': url
         }
-        
+
         headers = {
             'Content-Type': 'application/json',
             'User-Agent': 'Mozilla/5.0'
@@ -48,6 +49,7 @@ class BaseCommand:
 
     def command_function(self, arguments, sender, channel):
         raise NotImplementedError
+
 
 class BaseVariable:
 

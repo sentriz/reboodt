@@ -2,7 +2,9 @@ from plugins.__init__ import BaseCommand
 import random
 import os
 
+
 class Insult(BaseCommand):
+
     """
     reboodt plugin, a shakespearean insult generator
     (insults from github/0x27/hexchat-shakespeare-insult)
@@ -14,7 +16,6 @@ class Insult(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.command = ".insult"
         
         self.insults = {}
@@ -38,14 +39,12 @@ class Insult(BaseCommand):
 
     def command_function(self, arguments, sender, channel):
         user = arguments[0] if arguments else None
-
         first_word = random.choice(self.insults["first"])
         second_word = random.choice(self.insults["second"])
         third_word = random.choice(self.insults["third"])
-
-        insult = " ".join(first_word, second_word, third_word)
-
+        insult = " ".join((first_word, second_word, third_word))
         prefix = user + ", " if user else ""
+        
         return prefix + "thou " + insult + "!"
 
 classes = (Insult,)
