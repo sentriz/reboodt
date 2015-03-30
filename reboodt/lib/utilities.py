@@ -1,6 +1,7 @@
 import yaml
 import os
 
+
 def load_yaml(path_relative_to_reboodt):
 
     current_folder = os.path.dirname(__file__)
@@ -13,4 +14,3 @@ def load_yaml(path_relative_to_reboodt):
         yaml_contents = yaml.load(file)
 
     return yaml_contents
-

@@ -3,6 +3,7 @@ import os
 import imp
 from lib.utilities import load_yaml
 
+
 class IRCString:
 
     def __init__(self, raw_string):
@@ -24,24 +25,24 @@ class IRCString:
 
         to_parse = {
             'message': {
-                'message':   lambda s: s.split(" :")[-1].replace("\r\n", ""),
-                'sender':    lambda s: s[1:].split("!")[0],
-                'target':    lambda s: s.split()[2]
+                'message': lambda s: s.split(" :")[-1].replace("\r\n", ""),
+                'sender': lambda s: s[1:].split("!")[0],
+                'target': lambda s: s.split()[2]
             },
             'ping': {
-                'pong':      lambda s: s.split()[1].rstrip()
+                'pong': lambda s: s.split()[1].rstrip()
             },
             'notice': {
-                'message':   lambda s: " ".join(s.split()[3:])[1:]
+                'message': lambda s: " ".join(s.split()[3:])[1:]
             },
             'user_command': {
-                'command':   lambda s: s.split(" :")[1].split()[0],
+                'command': lambda s: s.split(" :")[1].split()[0],
                 'arguments': lambda s: s.split(" :")[1].split()[1:],
-                'channel':   lambda s: s.split()[2],
-                'sender':    lambda s: s[1:].split("!")[0]
+                'channel': lambda s: s.split()[2],
+                'sender': lambda s: s[1:].split("!")[0]
             },
             'motd': {
-                'message':   lambda s: " ".join(s.split()[3:])[1:]
+                'message': lambda s: " ".join(s.split()[3:])[1:]
             }
         }
 
@@ -72,6 +73,7 @@ class IRCString:
             else:
                 if result == raw_type:
                     return type_name
+
 
 class PluginManager:
 
@@ -173,11 +175,11 @@ class PluginManager:
         except Exception as exc:
             logging.exception(exc)
             return "error: {0}".format(str(exc).lower())
-            
+
         output_type = type(output).__name__
         if output_type not in ("str", "generator", "list"):
             logging.error('plugin "{0}" returns an invalid object type "{1}"'.format(
                 plugin.name, output_type))
             return
-            
+
         return output

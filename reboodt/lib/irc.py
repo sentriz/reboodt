@@ -3,6 +3,7 @@
 import socket
 import time
 
+
 class Protocol:
 
     def __init__(self, server, port=6667):
@@ -43,7 +44,7 @@ class Protocol:
                 chunk = self.connection.recv(512).decode()
             except TimeoutError:
                 raise RuntimeError("connection timed out")
-            if chunk == None:
+            if chunk is None:
                 raise RuntimeError("connection reset by peer")
             else:
                 data += chunk

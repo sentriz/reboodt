@@ -2,6 +2,7 @@ from plugins.__init__ import BaseCommand
 import json
 import urllib.parse
 
+
 def get_lastfm_data(api_key, api_method, **kwargs):
 
     base_url = "http://ws.audioscrobbler.com/2.0/?"
@@ -19,7 +20,9 @@ def get_lastfm_data(api_key, api_method, **kwargs):
 
     return response_json
 
+
 class UserInfo(BaseCommand):
+
     """
     reboodt plugin that displays information about a lastfm user
     usage: .fmu user
@@ -60,7 +63,7 @@ class UserInfo(BaseCommand):
         user_data = get_lastfm_data(
             self.api_keys["lastfm"],
             "user.getinfo",
-            user = urllib.parse.quote(user)
+            user=urllib.parse.quote(user)
         )
 
         if not "user" in user_data:
@@ -70,7 +73,9 @@ class UserInfo(BaseCommand):
             info_strings = self._generate_info(user_info)
             return info_strings
 
+
 class UserNP(BaseCommand):
+
     """
     reboodt plugin that tries to find now playing info on a given user
     usage: .fmnp user
@@ -120,10 +125,10 @@ class UserNP(BaseCommand):
         tracks_data = get_lastfm_data(
             self.api_keys["lastfm"],
             "user.getrecenttracks",
-            user = urllib.parse.quote(user)
+            user=urllib.parse.quote(user)
         )
 
-        if not "recenttracks" in tracks_data:
+        if "recenttracks" not in tracks_data:
             return '"{0}" is not a last.fm user'.format(user)
         else:
             info_strings = self._generate_info(tracks_data)
