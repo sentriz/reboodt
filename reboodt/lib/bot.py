@@ -10,7 +10,7 @@ import sys
 class Bot():
 
     def __init__(self, server, port, channels,
-            nick, network_name, password):
+            nick, network_name, password, admins):
 
         logging.info('initialising "{0}" bot'.format(network_name))
 
@@ -30,6 +30,7 @@ class Bot():
         self.nick = nick
         self.network_name = network_name
         self.password = password
+        self.admins = admins
 
         # misc
         self.in_channels = False
