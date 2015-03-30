@@ -1,5 +1,6 @@
 from plugins.__init__ import BaseCommand
-from lib.merriam_webster_api import CollegiateDictionary, WordNotFoundException
+from lib.merriam_webster_api import CollegiateDictionary
+from lib.merriam_webster_api import WordNotFoundException
 
 class MerriamWebster(BaseCommand):
     """
