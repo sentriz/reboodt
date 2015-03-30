@@ -54,10 +54,6 @@ class Google(BaseCommand):
 
         return results_generator
 
-<<<<<<< HEAD
-=======
-
->>>>>>> cli
 classes = (Google,)
 
 if __name__ == "__main__":
