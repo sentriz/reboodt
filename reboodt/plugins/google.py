@@ -5,11 +5,12 @@ import json
 
 
 class Google(BaseCommand):
+
     """
     reboodt plugin that googles a search query
     usage: .google query
     """
-
+    
     command = ".google"
 
     def _google_search(self, query):
@@ -53,6 +54,10 @@ class Google(BaseCommand):
 
         return results_generator
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cli
 classes = (Google,)
 
 if __name__ == "__main__":

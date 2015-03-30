@@ -1,7 +1,9 @@
 from plugins.__init__ import BaseCommand
 import urllib.parse
 
+
 class Python(BaseCommand):
+
     """
     reboodt plugin that evaluates a python expression
     usage: .py 1 + 2
