@@ -1,4 +1,32 @@
+"""
+Usage:
+  reboodt.py <host> <nick> [<port>]
+             [--channels <list>] [--password <password>] 
+             [--admins <admins>] [--debug]
+  reboodt.py --debug 
+  reboodt.py --help | --version
+
+Options:
+  --channels <list>      list of comma separated channels to join [default: #reboodt]
+  --debug                debug bot (show raw IRC messages, ect.)
+  --admins <admins>      list of comma separated admins
+  --password <password>  a password to identify with NickServ
+  -h, --help             show full help including Usage, Options, Examples, and a Note
+  -v, --version          show version
+  
+Examples:
+  python reboodt.py irc.esper.net botbot --channels #ai --admins "tim, john"
+  python reboodt.py irc.freenode.net the_bot 6697 --debug
+         (config.yml will not be used with these two)
+  python reboodt.py --debug
+         (config.yml will be used with this)
+Note:
+  if at least <host> isn't provided, config.yml will be used and all other 
+      options except --debug will be ignored
+"""
+
 from lib.bot import Bot
+from lib.docopt import docopt
 from lib.utilities import load_yaml
 import logging
 import os
@@ -66,6 +94,12 @@ if __name__ == "__main__":
         datefmt="%H:%M:%S",
         level=logging.INFO
     )
+    
+    args = docopt(__doc__, version="reboodt v1.5")
+    print(args)
+    print()
+    print(sys.argv)
+    sys.exit()
 
     try:
         config = load_yaml("config.yml")
