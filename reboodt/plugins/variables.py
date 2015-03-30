@@ -1,7 +1,9 @@
 from plugins.__init__ import BaseVariable
 from datetime import datetime
 
+
 class Time(BaseVariable):
+
     """
     reboodt variable, returns the current time
     usage: .time
@@ -19,7 +21,9 @@ class Time(BaseVariable):
         time_string = current_time.strftime(time_format)
         return time_string
 
+
 class Last(BaseVariable):
+
     """
     reboodt variable, returns the last message of the channel
     usage: .last

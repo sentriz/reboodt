@@ -2,7 +2,9 @@ from plugins.__init__ import BaseCommand
 import random
 import os
 
+
 class Insult(BaseCommand):
+
     """
     reboodt plugin, a shakespearean insult generator
     (insults from github/0x27/hexchat-shakespeare-insult)

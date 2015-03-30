@@ -59,12 +59,14 @@ class Pattern(object):
         either = [list(c.children) for c in self.either.children]
         for case in either:
             for e in [c for c in case if case.count(c) > 1]:
-                if type(e) is Argument or type(e) is Option and e.argcount:
+                if isinstance(e, Argument) or isinstance(
+                        e, Option) and e.argcount:
                     if e.value is None:
                         e.value = []
-                    elif type(e.value) is not list:
+                    elif not isinstance(e.value, list):
                         e.value = e.value.split()
-                if type(e) is Command or type(e) is Option and e.argcount == 0:
+                if isinstance(e, Command) or isinstance(
+                        e, Option) and e.argcount == 0:
                     e.value = 0
         return self
 
@@ -79,24 +81,30 @@ class Pattern(object):
             children = groups.pop(0)
             types = [type(c) for c in children]
             if Either in types:
-                either = [c for c in children if type(c) is Either][0]
+                either = [c for c in children if isinstance(c, Either)][0]
                 children.pop(children.index(either))
                 for c in either.children:
                     groups.append([c] + children)
             elif Required in types:
-                required = [c for c in children if type(c) is Required][0]
+                required = [c for c in children if isinstance(c, Required)][0]
                 children.pop(children.index(required))
                 groups.append(list(required.children) + children)
             elif Optional in types:
-                optional = [c for c in children if type(c) is Optional][0]
+                optional = [c for c in children if isinstance(c, Optional)][0]
                 children.pop(children.index(optional))
                 groups.append(list(optional.children) + children)
             elif AnyOptions in types:
-                optional = [c for c in children if type(c) is AnyOptions][0]
+                optional = [
+                    c for c in children if isinstance(
+                        c,
+                        AnyOptions)][0]
                 children.pop(children.index(optional))
                 groups.append(list(optional.children) + children)
             elif OneOrMore in types:
-                oneormore = [c for c in children if type(c) is OneOrMore][0]
+                oneormore = [
+                    c for c in children if isinstance(
+                        c,
+                        OneOrMore)][0]
                 children.pop(children.index(oneormore))
                 groups.append(list(oneormore.children) * 2 + children)
             else:
@@ -124,10 +132,10 @@ class ChildPattern(Pattern):
         left_ = left[:pos] + left[pos + 1:]
         same_name = [a for a in collected if a.name == self.name]
         if type(self.value) in (int, list):
-            if type(self.value) is int:
+            if isinstance(self.value, int):
                 increment = 1
             else:
-                increment = ([match.value] if type(match.value) is str
+                increment = ([match.value] if isinstance(match.value, str)
                              else match.value)
             if not same_name:
                 match.value = increment
@@ -156,7 +164,7 @@ class Argument(ChildPattern):
 
     def single_match(self, left):
         for n, p in enumerate(left):
-            if type(p) is Argument:
+            if isinstance(p, Argument):
                 return n, Argument(self.name, p.value)
         return None, None
 
@@ -175,7 +183,7 @@ class Command(Argument):
 
     def single_match(self, left):
         for n, p in enumerate(left):
-            if type(p) is Argument:
+            if isinstance(p, Argument):
                 if p.value == self.name:
                     return n, Command(self.name, True)
                 else:
@@ -457,7 +465,7 @@ def parse_defaults(doc):
     split = [s1 + s2 for s1, s2 in zip(split[::2], split[1::2])]
     options = [Option.parse(s) for s in split if s.startswith('-')]
     #arguments = [Argument.parse(s) for s in split if s.startswith('<')]
-    #return options, arguments
+    # return options, arguments
     return options
 
 
@@ -486,6 +494,7 @@ def extras(help, version, options, doc):
 
 
 class Dict(dict):
+
     def __repr__(self):
         return '{%s}' % ',\n '.join('%r: %r' % i for i in sorted(self.items()))
 
@@ -559,7 +568,7 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
     options = parse_defaults(doc)
     pattern = parse_pattern(formal_usage(DocoptExit.usage), options)
     # [default] syntax for argument is disabled
-    #for a in pattern.flat(Argument):
+    # for a in pattern.flat(Argument):
     #    same_name = [d for d in arguments if d.name == a.name]
     #    if same_name:
     #        a.value = same_name[0].value
@@ -569,7 +578,7 @@ def docopt(doc, argv=None, help=True, version=None, options_first=False):
     for ao in pattern.flat(AnyOptions):
         doc_options = parse_defaults(doc)
         ao.children = list(set(doc_options) - pattern_options)
-        #if any_options:
+        # if any_options:
         #    ao.children += [Option(o.short, o.long, o.argcount)
         #                    for o in argv if type(o) is Option]
     extras(help, version, argv, doc)
