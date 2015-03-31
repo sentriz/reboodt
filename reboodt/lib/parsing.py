@@ -30,7 +30,7 @@ class IRCString:
                 'target': lambda s: s.split()[2]
             },
             'ping': {
-                'pong': lambda s: s.split()[1].rstrip()
+                'pong': lambda s: s.split()[1].rstrip()[1:]
             },
             'notice': {
                 'message': lambda s: " ".join(s.split()[3:])[1:]

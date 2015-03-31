@@ -46,9 +46,13 @@ class Bot():
         # check for and respond to PING requests
         if self.string.type == "ping":
             pong = self.string.parsed["pong"]
-            self.protocol.send("PONG " + pong)
+            self.protocol.send("PONG :" + pong)
             if not self.in_channels:
-                self._join_channels()
+                for channel in self.channels:
+                    if not channel.startswith("#"):
+                        continue
+                    logging.info('joining channel "{0}"'.format(channel))
+                    self.protocol.join(channel)
                 self.in_channels = True
 
         elif self.string.type == "notice":
@@ -93,13 +97,6 @@ class Bot():
             else:
                 logging.info('<< "{0}" is not a plugin command'.format(
                     self.string.parsed["command"]))
-
-    def _join_channels(self):
-        for channel in self.channels:
-            if not channel.startswith("#"):
-                continue
-            logging.info('joining channel "{0}"'.format(channel))
-            self.protocol.join(channel)
 
     def _get_help(self, command):
         command_for_help = "." + command
