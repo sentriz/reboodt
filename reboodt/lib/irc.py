@@ -2,6 +2,7 @@
 
 import socket
 import time
+import logging
 
 
 class Protocol:
@@ -20,7 +21,8 @@ class Protocol:
         send chunks of the message until the entire
         message has been sent to the server
         """
-
+        logging.debug("send: " + message.strip())
+        
         datasent = 0
         message += "\n"
 
@@ -33,8 +35,8 @@ class Protocol:
 
     def recv(self):
         """
-        recieve data from the server until
-        we have recieved the end of the message
+        receive data from the server until
+        we have received the end of the message
         """
 
         data = ""
@@ -49,6 +51,8 @@ class Protocol:
             else:
                 data += chunk
 
+        logging.debug("receive: " + data.strip())
+                
         return data
 
     def join(self, channel):
