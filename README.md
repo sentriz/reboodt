@@ -10,10 +10,20 @@ Installation
 -----------
 move `config.sample.yml` to `config.yml` and modify.  
 move `api_keys.sample.yml` to `api_keys.yml` and (optionally) modify.  
-
-    python reboodt.py
     
 Usage
+-----------
+    python reboodt.py [--verbose] [--debug]
+    python reboodt.py (--help | --version)
+    
+Options
+-----------
+    -d, --debug    debug bot (show raw IRC messages, ect.)
+    -v, --verbose  be verbose (show channel messages, commands, plugin loading, ect.)
+    -h, --help     show full help
+    -V, --version  show reboodt version
+
+Commands
 -----------
 - commands start with `.` followed by the command name ..
   - eg. `.calc` ..
@@ -21,14 +31,12 @@ Usage
   - eg. `.qr .last`, which would generate a [QR code](http://en.wikipedia.org/wiki/QR_code) of the last message said in the channel ..
 - the arguments don't have to be just a string or just a variable either, they can be mixed up ..
   - eg. `.say the current time is .time on the server` ..
-- to create a command/variable ..
+- to create a command/variable (plugin)..
   - make a copy of `files/template.txt` for dir `plugins/` ..
   - rename to `your_plugin.py` ..
   - modify ..
 
-Commands
------------
-
+below is a table of plugins that have already been created 
 note: `[]` denotes optional arguments
 
 command..   | takes argument(s).. | and returns..
@@ -50,8 +58,7 @@ command..   | takes argument(s).. | and returns..
 
 Variables
 -----------
-
-variable  | is replaced with..
-----------|-------------------
-**.last** | the `last` message that was said in the channel
-**.time** | "yyyy/mm/dd hh:mm:ss"
+variable   | is replaced with..
+-----------|-------------------
+**.last**  | the `last` message that was said in the channel
+**.time**  | "yyyy/mm/dd hh:mm:ss"
