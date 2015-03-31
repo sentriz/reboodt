@@ -117,6 +117,6 @@ if __name__ == "__main__":
         try:
             time.sleep(5)
         except KeyboardInterrupt:
-            logging.warning("all instances of reboodt were exited due to a KeyboardInterrupt")
+            logging.warning("all bots stopped due to KeyboardInterrupt")
             break
     sys.exit()
