@@ -1,5 +1,5 @@
-# lastfm api keys: http://www.last.fm/api/accounts
-# the one below was provided by the documentation and may not need to be changed
+# last.fm api keys: http://www.last.fm/api/accounts
+# the one below was provided by the last.fm api documentation and may not need to be changed
 lastfm: 4f8a5bb181c088f516557b9cf8e9b523
 
 # goo.gl url shorter api keys: https://developers.google.com/url-shortener/v1/getting_started#APIKey
