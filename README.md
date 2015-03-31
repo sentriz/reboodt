@@ -16,6 +16,8 @@ Usage
     python reboodt.py [--verbose] [--debug]
     python reboodt.py (--help | --version)
     
+note: running in `--verbose` mode is recommended for first run
+    
 Options
 -----------
     -d, --debug    debug bot (show raw IRC messages, ect.)
