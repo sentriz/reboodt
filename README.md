@@ -1,5 +1,5 @@
 **reboodt** is a python *3+* [IRC bot](http://en.wikipedia.org/wiki/IRC_bot) that supports multiple servers, channels, and commands.  
-It also supports a **plugin** system to easily add your *own* commands and variables. (explained below)  
+It also supports a **plugin** system to easily add your *own* commands and variables. 
 ###### note: this software has only been tested on Python 3.4.0, please report any issues you may have on earlier Python 3 versions
 
 
