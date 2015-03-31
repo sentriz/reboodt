@@ -27,7 +27,7 @@ Commands
 -----------
 - commands start with `.` followed by the command name ..
   - eg. `.calc` ..
-- after the command - a string or variable can be passed as an argument ..
+- after the command - a string or [variable](#variables) can be passed as an argument ..
   - eg. `.qr .last`, which would generate a [QR code](http://en.wikipedia.org/wiki/QR_code) of the last message said in the channel ..
 - the arguments don't have to be just a string or just a variable either, they can be mixed up ..
   - eg. `.say the current time is .time on the server` ..
