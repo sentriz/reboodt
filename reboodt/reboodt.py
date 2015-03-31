@@ -27,9 +27,9 @@ class UserBot(Bot):
         """
         loop that listens and performs user defined commands
         """
-        
+
         super()._actions()
-        
+
         if not self.string.type == "user_command":
             return
         command = self.string.parsed["command"]
@@ -67,9 +67,9 @@ class UserBot(Bot):
             else:
                 command_for_help = arguments[0]
                 self._get_help(command_for_help)
-                
+
 if __name__ == "__main__":
-    
+
     args = docopt(__doc__, version="reboodt v1.5")
 
     logging_level = logging.WARNING
@@ -81,20 +81,20 @@ if __name__ == "__main__":
         format="[%(levelname)s|%(asctime)s] %(threadName)s: %(message)s",
         datefmt="%H:%M:%S",
         level=logging_level)
-    
+
     try:
         config = load_yaml("config.yml")
     except FileNotFoundError:
         logging.critical("could not find config.yml")
         sys.exit(1)
-        
+
     servers = config["servers"]
     admins = config["admins"]
     enabled_servers = [server["connect"] for _, server in servers.items()]
     if not any(enabled_servers):
         logging.critical("no servers enabled to connect to in config.yml")
         sys.exit(1)
-        
+
     for name, server in servers.items():
         if not server["connect"]:
             continue
@@ -107,13 +107,16 @@ if __name__ == "__main__":
             password=server["password"],
             admins=admins
         )
+
         server_thread = threading.Thread(
             None, target=reboodt.run, name=name)
+        server_thread.setDaemon(True)
         server_thread.start()
-            
-    try:
-        while True:
+
+    while True:
+        try:
             time.sleep(5)
-    except KeyboardInterrupt:
-        logging.warning("program was closed")
-        sys.exit()
+        except KeyboardInterrupt:
+            logging.warning("all instances of reboodt were exited due to a KeyboardInterrupt")
+            break
+    sys.exit()
