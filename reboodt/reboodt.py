@@ -1,29 +1,13 @@
 """
 Usage:
-  reboodt.py [<host> <nick>] [<port>]
-             [--channels <list>] [--password <password>]
-             [--admins <admins>] [--debug]
-  reboodt.py --debug
-  reboodt.py --help | --version
+  reboodt.py [--verbose] [--debug]
+  reboodt.py (--help | --version)
 
 Options:
-  --channels <list>      list of comma separated channels to join [default: #reboodt]
-  --debug                debug bot (show raw IRC messages, ect.)
-  --admins <admins>      list of comma separated admins
-  --password <password>  a password to identify with NickServ
-  -h, --help             show full help including Usage, Options, Examples, and a Note
-  -v, --version          show version
-
-Examples:
-  python reboodt.py irc.esper.net botbot --channels #ai --admins "tim, john"
-  python reboodt.py irc.freenode.net the_bot 6697 --debug
-         (config.yml will not be used with these two)
-  python reboodt.py --debug
-         (config.yml will be used with this)
-
-Note:
-  if at least <host> isn't provided, config.yml will be used and all other
-      options except --debug will be ignored
+  -d, --debug    debug bot (show raw IRC messages, ect.)
+  -v, --verbose  be verbose (show channel messages, commands, plugin loading, ect.)
+  -h, --help     show full help
+  -V, --version  show reboodt version
 """
 
 from lib.bot import Bot
@@ -85,57 +69,47 @@ class UserBot(Bot):
                 self._get_help(command_for_help)
                 
 if __name__ == "__main__":
-
-    logging.basicConfig(
-        format="[%(asctime)s] %(threadName)s: %(message)s",
-        datefmt="%H:%M:%S",
-        level=logging.INFO
-    )
     
     args = docopt(__doc__, version="reboodt v1.5")
-    if args["<host>"] and args["<nick>"]:
-        reboodt = UserBot(
-            server=args["<host>"],
-            port=args["<port>"] or 6667,
-            channels=args["--channels"].replace(" ", "").split(","),
-            nick=args["<nick>"],
-            network_name=args["<host>"],
-            password=args["--password"],
-            admins=args["--admins"].replace(" ", "").split(",")
-        )
-        server_thread=threading.Thread(
-            None, target=reboodt.run, name=args["<host>"])
-        server_thread.start()
+
+    logging_level = logging.WARNING
+    if args["--verbose"]:
+        logging_level = logging.INFO
+    if args["--debug"]:
+        logging_level = logging.DEBUG
+    logging.basicConfig(
+        format="[%(levelname)s|%(asctime)s] %(threadName)s: %(message)s",
+        datefmt="%H:%M:%S",
+        level=logging_level)
+    
+    try:
+        config = load_yaml("config.yml")
+    except FileNotFoundError:
+        logging.critical("could not find config.yml")
+        sys.exit(1)
         
-    else:
-        try:
-            config = load_yaml("config.yml")
-        except FileNotFoundError:
-            logging.critical("could not find config.yml")
-            sys.exit(1)
-            
-        servers = config["servers"]
-        admins = config["admins"]
-        enabled_servers = [server["connect"] for _, server in servers.items()]
-        if not any(enabled_servers):
-            logging.critical("no servers enabled to connect to in config.yml")
-            sys.exit(1)
-            
-        for name, server in servers.items():
-            if not server["connect"]:
-                continue
-            reboodt = UserBot(
-                server=server["host"],
-                port=server["port"],
-                channels=server["channels"],
-                nick=server["nick"],
-                network_name=name,
-                password=server["password"],
-                admins=admins
-            )
-            server_thread = threading.Thread(
-                None, target=reboodt.run, name=name)
-            server_thread.start()
+    servers = config["servers"]
+    admins = config["admins"]
+    enabled_servers = [server["connect"] for _, server in servers.items()]
+    if not any(enabled_servers):
+        logging.critical("no servers enabled to connect to in config.yml")
+        sys.exit(1)
+        
+    for name, server in servers.items():
+        if not server["connect"]:
+            continue
+        reboodt = UserBot(
+            server=server["host"],
+            port=server["port"],
+            channels=server["channels"],
+            nick=server["nick"],
+            network_name=name,
+            password=server["password"],
+            admins=admins
+        )
+        server_thread = threading.Thread(
+            None, target=reboodt.run, name=name)
+        server_thread.start()
             
     try:
         while True:
