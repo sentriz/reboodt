@@ -1,6 +1,6 @@
 #command
 .8 question: asks magic 8 ball a question
-.calc 1 + 2: returns "3", using Wolfram|Alpha API - it accepts almost anything
+.calc 1 + 2: returns "3" using Wolfram|Alpha API (it accepts almost anything)
 .fmu user: returns info on a last.fm user
 .fmnp user: returns last.fm now playing info on a user
 .define word: defines a word 
@@ -8,7 +8,7 @@
 .help [command]: returns help for a command if provided. otherwise, lists commands
 .insult [user]: returns a Shakespearean insult, optionally aimed at a user
 .join #channel: joins a #channel
-.py expression: evaluates a python expression (not locally), eg. ".py len([1, 2])" returns "2"
+.py expression: evaluates a python expression (not locally). eg. ".py len([1, 2])" returns "2"
 .qr string: returns a qr code of a string
 .quit [message]: quits the current server with an optional message
 .reload": reloads all plugins in the plugins directory
