@@ -1,4 +1,4 @@
-import yaml
+import lib.yaml as yaml
 import os
 
 
