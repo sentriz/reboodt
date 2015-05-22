@@ -61,6 +61,7 @@ class Bot():
             # hook NickServ asking for authentication
             # "this nickname is registered".. "please choose"..
             if "choose a different" in self.raw_string:
+                logging.debug("server asked for password")
                 self.protocol.privmsg("NickServ", "identify " + self.password)
                 hidden_password = "*" * len(self.password)
                 logging.info(
