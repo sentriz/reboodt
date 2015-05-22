@@ -36,6 +36,7 @@ class UserBot(Bot):
         sender = self.string.parsed["sender"]
         arguments = self.string.parsed["arguments"]
         channel = self.string.parsed["channel"]
+        
         if command == ".join" and sender in self.admins:
             channels = arguments
             if not channels:
@@ -48,15 +49,19 @@ class UserBot(Bot):
                     continue
                 self.protocol.join(channel_)
                 self.say("in channel " + channel_)
+                
         elif command == ".quit" and sender in self.admins:
             reason = " ".join(arguments) or "disconnect"
             self.protocol.disconnect(reason)
+            
         elif command == ".reload" and sender in self.admins:
             self.plugins.load()
             self.plugins.load_help()
             self.say("plugins/help file reloaded")
+            
         elif command == ".ping":
             self.say("pong!")
+            
         elif command == ".help":
             if not arguments:
                 command_list = ", ".join(sorted(self.plugins.commands))
@@ -88,14 +93,12 @@ if __name__ == "__main__":
         logging.critical("could not find config.yml")
         sys.exit(1)
 
-    servers = config["servers"]
-    admins = config["admins"]
-    enabled_servers = [server["connect"] for _, server in servers.items()]
+    enabled_servers = [server["connect"] for _, server in config["servers"].items()]
     if not any(enabled_servers):
         logging.critical("no servers enabled to connect to in config.yml")
         sys.exit(1)
 
-    for name, server in servers.items():
+    for name, server in config["servers"].items():
         if not server["connect"]:
             continue
         reboodt = UserBot(
@@ -105,7 +108,7 @@ if __name__ == "__main__":
             nick=server["nick"],
             network_name=name,
             password=server["password"],
-            admins=admins
+            admins=config["admins"]
         )
 
         server_thread = threading.Thread(
@@ -116,7 +119,7 @@ if __name__ == "__main__":
     while True:
         try:
             time.sleep(5)
-        except KeyboardInterrupt:
-            logging.warning("all bots stopped due to KeyboardInterrupt")
+        except (KeyboardInterrupt, SystemExit):
+            logging.warning("all bots stopped due to KeyboardInterrupt or SystemExit")
             break
     sys.exit()
