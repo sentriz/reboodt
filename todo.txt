@@ -1,8 +1,5 @@
-- add a CLI
-  - options
-    - --use-config
-    - --server
-    - --port
-    - --channels
-    - --nick
-    - --debug
+- don't pass "bot" to PluginManager, or to plugins with PluginManager
+  - this is only used for the ".last" variable
+  - instead make reboodt/files/last_message.txt
+  - this will contain the last messages said in the channels that the bot is connected to
+  - the format "network_name:channel_name:message" should be used
