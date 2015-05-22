@@ -60,7 +60,7 @@ class Bot():
                 return
             # hook NickServ asking for authentication
             # "this nickname is registered".. "please choose"..
-            if "choose a different" in self.raw_string:
+            if "nickname is registered" in self.string.parsed["message"]:
                 self.protocol.privmsg("NickServ", "identify " + self.password)
                 hidden_password = "*" * len(self.password)
                 logging.info(
@@ -73,7 +73,8 @@ class Bot():
             if not channel.startswith("#"):
                 return
             # print command or message
-            self._log_message(**self.string.parsed)
+            logging.info("[{target}] <{sender}> {message}".format(
+                **self.string.parsed))
             # add the last channel message to self.last_message
             # this is used by the .last variable
             self.last_message = self.string.parsed["message"]
@@ -109,10 +110,6 @@ class Bot():
                     return
         self.say('error: could not find help for "{0}"'.format(
             command_for_help))
-
-    def _log_message(self, target, sender, message):
-        logging.info("[{target}] <{sender}> {message}".format(
-            **locals()))
 
     def say(self, message, channel=None):
         if not channel:
