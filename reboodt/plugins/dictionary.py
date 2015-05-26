@@ -20,8 +20,8 @@ class MerriamWebster(BaseCommand):
                 for definition, examples in entry.senses:
                     if len(definitions) >= 3:
                         break
-                    to_append = (entry.word, entry.function, definition)
-                    definitions.append(to_append)
+                    definitions.append((entry.function, definition))
+                    
         except WordNotFoundException as exc:
             return_string = 'no definitions found for "{0}"'.format(query)
             if exc.suggestions:
@@ -36,9 +36,9 @@ class MerriamWebster(BaseCommand):
             yield return_string
             return
             
-        for word, function, definition in definitions:
+        for function, definition in definitions:
             definition_string = definition.strip("; ")
-            yield "[{0}|{1}] {2}".format(word, function, definition_string)
+            yield "[{0}] {1}".format(function, definition_string)
 
     def command_function(self, arguments, sender, channel):
         query = " ".join(arguments)
