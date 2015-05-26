@@ -83,8 +83,7 @@ if __name__ == "__main__":
     if args["--debug"]:
         logging_level = logging.DEBUG
     logging.basicConfig(
-        format="[%(levelname)s|%(asctime)s] %(threadName)s: %(message)s",
-        datefmt="%H:%M:%S",
+        format="[%(levelname)s] %(threadName)s: %(message)s",
         level=logging_level)
 
     try:
