@@ -1,3 +1,6 @@
+# vim swap files
+*~
+
 # personal reboodt config
 config.yml
 api_keys.yml
