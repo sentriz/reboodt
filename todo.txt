@@ -3,3 +3,4 @@
   - instead make reboodt/files/last_message.txt
   - this will contain the last messages said in the channels that the bot is connected to
   - the format "network_name:channel_name:message" should be used
+
