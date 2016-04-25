@@ -10,9 +10,12 @@ class WolframAlpha(BaseCommand):
     usage: .c 5 + 2
     result: 7
     """
-    
-    command = ".calc"
-        
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.command = ".calc"
+
     def _calculate(self, string):
         base_url = "http://tumbolia.appspot.com/wa/"
 
@@ -38,9 +41,9 @@ class WolframAlpha(BaseCommand):
             return "{0} = {1}".format(left, right)
         else:
             return "no results found"
-        
+
 classes = (WolframAlpha,)
-        
+
 if __name__ == "__main__":
     for class_ in classes:
         print(class_.__doc__)

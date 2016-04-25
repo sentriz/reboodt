@@ -1,5 +1,3 @@
-# Protocol() based on Alec Hussey's PyBotlib
-
 import socket
 import time
 import logging
@@ -22,7 +20,7 @@ class Protocol:
         message has been sent to the server
         """
         logging.debug("send: " + message.strip())
-        
+
         datasent = 0
         message += "\n"
 
@@ -52,7 +50,7 @@ class Protocol:
                 data += chunk
 
         logging.debug("receive: " + data.strip())
-                
+
         return data
 
     def join(self, channel):

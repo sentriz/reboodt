@@ -9,10 +9,13 @@ class QR(BaseCommand):
     usage: .qr [string for qr code]
     result: http://goo.gl/xxxxxx
     """
-        
-    command = ".qr"
-        
-    def _string_to_qr(self, string):            
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.command = ".qr"
+
+    def _string_to_qr(self, string):
         qr_api_url = "https://api.qrserver.com/v1/create-qr-code/?"
         qr_api_args = {
             "size": "150x150",

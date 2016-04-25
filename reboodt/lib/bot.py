@@ -1,6 +1,3 @@
-# Bot() based on Alec Hussey's PyBotlib
-# last_channel_message
-
 from lib.irc import Protocol
 from lib.parsing import IRCString
 from lib.parsing import PluginManager

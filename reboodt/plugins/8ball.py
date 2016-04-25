@@ -15,8 +15,8 @@ class EightBall(BaseCommand):
         super().__init__(*args, **kwargs)
 
         self.command = ".8"
-        self.replies = []
 
+        self.replies = []
         self._load_replies()
 
     def _load_replies(self):

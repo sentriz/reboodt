@@ -10,8 +10,11 @@ class Google(BaseCommand):
     reboodt plugin that googles a search query
     usage: .google query
     """
-    
-    command = ".google"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.command = ".google"
 
     def _google_search(self, query):
         base_url = 'http://ajax.googleapis.com/ajax/services/search/web?'

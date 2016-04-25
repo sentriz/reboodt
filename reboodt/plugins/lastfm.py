@@ -28,7 +28,10 @@ class UserInfo(BaseCommand):
     usage: .fmu user
     """
 
-    command = ".fmu"
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.command = ".fmu"
 
     def _generate_info(self, user_info):
         info_list, image_url = [], ""
@@ -78,7 +81,10 @@ class UserNP(BaseCommand):
     usage: .fmnp user
     """
 
-    command = ".fmnp"
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.command = ".fmnp"
 
     def _generate_info(self, tracks_data):
         recent_tracks = tracks_data["recenttracks"]
@@ -124,7 +130,7 @@ class UserNP(BaseCommand):
 
         if "recenttracks" not in tracks_data:
             return '"{0}" is not a last.fm user'.format(user)
-        elif "track" not in tracks_data["recenttracks"]:   
+        elif "track" not in tracks_data["recenttracks"]:
             return 'last.fm user "{0}" has never played anything'.format(user)
         else:
             info_strings = self._generate_info(tracks_data)

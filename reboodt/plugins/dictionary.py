@@ -8,20 +8,23 @@ class MerriamWebster(BaseCommand):
     usage: .define word
     """
 
-    command = ".define"
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.command = ".define"
 
     def _lookup(self, query):
         api_key = self.api_keys["merriam_webster_collegiate"]
         dictionary = CollegiateDictionary(api_key)
         definitions = []
-        
+
         try:
             for entry in dictionary.lookup(query):
                 for definition, examples in entry.senses:
                     if len(definitions) >= 3:
                         break
                     definitions.append((entry.function, definition))
-                    
+
         except WordNotFoundException as exc:
             return_string = 'no definitions found for "{0}"'.format(query)
             if exc.suggestions:
@@ -30,12 +33,12 @@ class MerriamWebster(BaseCommand):
                 if len(short_suggestions) == 1:
                     return_string += '"' + short_suggestions[0] + '"'
                 else:
-                    return_string += '"' + '", "'.join(short_suggestions[:-1]) 
+                    return_string += '"' + '", "'.join(short_suggestions[:-1])
                     return_string += '"' + ' or "' + short_suggestions[-1] + '"'
                 return_string += "?"
             yield return_string
             return
-            
+
         for function, definition in definitions:
             definition_string = definition.strip("; ")
             yield "[{0}] {1}".format(function, definition_string)
@@ -50,7 +53,7 @@ class MerriamWebster(BaseCommand):
             string += self._shorten_url(api_register_url)
             return string
         definitions = self._lookup(query)
-        
+
         return definitions
 
 classes = (MerriamWebster,)

@@ -10,7 +10,10 @@ class Python(BaseCommand):
     result: 3
     """
 
-    command = ".py"
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.command = ".py"
 
     def _evaluate(self, string):
         base_url = "http://tumbolia.appspot.com/py/"

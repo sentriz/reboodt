@@ -38,7 +38,7 @@ Commands
   - rename to `your_plugin.py` ..
   - modify ..
 
-below is a table of plugins that have already been created 
+below is a table of plugins that have already been created  
 note: `[]` denotes optional arguments
 
 command..   | takes argument(s).. | and returns..
